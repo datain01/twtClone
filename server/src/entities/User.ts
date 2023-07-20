@@ -8,6 +8,7 @@ import Tweet from "./Tweet";
 import Retweet from "./Retweet";
 import Reply from "./Reply";
 import Like from "./Like";
+import { Expose } from "class-transformer";
 
 //유저 정보 엔티티
 @Entity("users")
@@ -43,9 +44,6 @@ export default class User extends BaseEntity {
     @OneToMany(()=>Tweet, (tweet) => tweet.user)
     tweets: Tweet[];
 
-    @Column({default: 0})
-    replyCount: number;
-
 // 팔로잉
     @OneToMany(()=>Follow, (follow) => follow.follower)
     followings: Follow[];
@@ -64,20 +62,35 @@ export default class User extends BaseEntity {
     @OneToMany(()=>Like, (like) => like.tweet)
     likes: Like[];
 
-    @Column({default: 0})
-    likeCount: number;
-
 // 리트윗
     @OneToMany(()=>Retweet, (retweet) => retweet.tweet)
     retweets: Retweet[];
 
-    @Column({default: 0})
-    retweetCount: number;
-
 // 답글
     @OneToMany(()=>Reply, (reply) => reply.tweet)
     replies: Reply[];
+    
+//프로필 사진
+    @Column({ nullable: true })
+    imageUrn: string;
 
+    @Expose()
+    get imageUrl(): string {
+        return this.imageUrn ? `${process.env.APP_URL}/images/${this.imageUrn}` :
+            "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+    }
+
+    // 헤더 사진
+    @Column({ nullable: true })
+    headerUrn: string;
+    @Expose()
+    get headerUrl(): string {
+        return this.headerUrn ? `${process.env.APP_URL}/images/${this.headerUrn}` :
+            undefined;
+    }
+
+
+// 비번 암호화
     @BeforeInsert()
     async hashPassword() {
         this.password = await bcrypt.hash(this.password, 6)
