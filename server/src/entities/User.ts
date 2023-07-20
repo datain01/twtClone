@@ -72,15 +72,15 @@ export default class User extends BaseEntity {
     
 //프로필 사진
     @Column({ nullable: true })
-    imageUrn: string;
+    profileUrn: string;
 
     @Expose()
     get imageUrl(): string {
-        return this.imageUrn ? `${process.env.APP_URL}/images/${this.imageUrn}` :
+        return this.profileUrn ? `${process.env.APP_URL}/images/${this.profileUrn}` :
             "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
     }
 
-    // 헤더 사진
+// 헤더 사진
     @Column({ nullable: true })
     headerUrn: string;
     @Expose()
