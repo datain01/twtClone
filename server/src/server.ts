@@ -3,6 +3,7 @@ import morgan from "morgan";
 import {AppDataSource} from "./data-source"
 
 const app = express();
+const origin = "http://localhost:3000";
 
 app.use(express.json());
 app.use(morgan("dev"));

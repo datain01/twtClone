@@ -1,5 +1,8 @@
 import { IsEmail, Length, Matches } from "class-validator";
-import { BaseEntity, Column, Entity, Index, OneToMany } from "typeorm";
+import { BeforeInsert, Column, Entity, Index, OneToMany } from "typeorm";
+import bcrypt from 'bcryptjs';
+
+import BaseEntity from './Entity';
 import Follow from "./Follow";
 import Tweet from "./Tweet";
 import Retweet from "./Retweet";
@@ -8,7 +11,6 @@ import Like from "./Like";
 
 //유저 정보 엔티티
 @Entity("users")
-
 export default class User extends BaseEntity {
 
 // 이메일 인스턴스
@@ -41,24 +43,44 @@ export default class User extends BaseEntity {
     @OneToMany(()=>Tweet, (tweet) => tweet.user)
     tweets: Tweet[];
 
+    @Column({default: 0})
+    replyCount: number;
+
 // 팔로잉
     @OneToMany(()=>Follow, (follow) => follow.follower)
     followings: Follow[];
+
+    @Column({default: 0})
+    followingCount: number;
     
 // 팔로워
     @OneToMany(()=>Follow, (follow) => follow.following)
     followers: Follow[];
 
+    @Column({default: 0})
+    followerCount: number;
+
 // 좋아요
     @OneToMany(()=>Like, (like) => like.tweet)
     likes: Like[];
+
+    @Column({default: 0})
+    likeCount: number;
 
 // 리트윗
     @OneToMany(()=>Retweet, (retweet) => retweet.tweet)
     retweets: Retweet[];
 
+    @Column({default: 0})
+    retweetCount: number;
+
 // 답글
     @OneToMany(()=>Reply, (reply) => reply.tweet)
     replies: Reply[];
+
+    @BeforeInsert()
+    async hashPassword() {
+        this.password = await bcrypt.hash(this.password, 6)
+    }
 
 }

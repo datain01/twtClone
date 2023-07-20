@@ -1,12 +1,12 @@
 import { Length } from 'class-validator';
-import { BaseEntity, Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
+import BaseEntity from './Entity';
 import User from "./User";
 import Tweet from './Tweet';
 
 
 //답글 엔티티
 @Entity("replies")
-
 export default class Reply extends BaseEntity {
 
     @Column()

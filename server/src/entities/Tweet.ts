@@ -1,5 +1,6 @@
 import { Length } from 'class-validator';
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany } from "typeorm"
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm"
+import BaseEntity from './Entity';
 import User from './User';
 import Like from './Like';
 import Retweet from './Retweet';
@@ -7,7 +8,6 @@ import Reply from './Reply';
 
 //트윗 엔티티
 @Entity("tweets")
-
 export default class Tweet extends BaseEntity {
 
     //본문
@@ -19,16 +19,25 @@ export default class Tweet extends BaseEntity {
     @ManyToOne (() => User, (user)=>user.tweets)
     user: User
 
-    // 트윗의 좋아요수
+    // 트윗의 좋아요
     @OneToMany (() => Like, (like)=>like.tweet)
     likes: Like[];
 
-    // 트윗의 알티수
+    @Column({default: 0})
+    likeCount: number;
+
+    // 트윗의 알티
     @OneToMany(() => Retweet, (retweet) => retweet.tweet)
     retweets: Retweet[];
+
+    @Column({default: 0})
+    retweetCount: number;
 
     // 트윗의 답글
     @OneToMany(() => Reply, (reply) => reply.tweet)
     replies: Reply[];
+
+    @Column({default: 0})
+    replyCount: number;
 
 }
