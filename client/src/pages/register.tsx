@@ -62,7 +62,7 @@ const Register = () => {
                         error={errors.password}
                         />
                         <div className="d-grid gap-2 mb-2">
-                            <button className="btn btn-primary" type="button">회원가입 하기</button>
+                            <button className="btn btn-primary">회원가입 하기</button>
                         </div>
                     </form>
                     
