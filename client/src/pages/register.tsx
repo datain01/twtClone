@@ -8,6 +8,7 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [nickname, setNickname] = useState("");
     const [errors, setErrors] = useState<any>([]);
     
     // const {authenticated} = useAuthState();
@@ -26,6 +27,7 @@ const Register = () => {
                 email,
                 password,
                 username,
+                nickname
             })
             console.log('res', res);
             router.push("/login");
@@ -60,6 +62,12 @@ const Register = () => {
                         value={password}
                         setValue={setPassword}
                         error={errors.password}
+                        />
+                        <InputGroup
+                        placeholder="Nickname"
+                        value={nickname}
+                        setValue={setNickname}
+                        error={errors.nickname}
                         />
                         <div className="d-grid gap-2 mb-2">
                             <button className="btn btn-primary">회원가입 하기</button>

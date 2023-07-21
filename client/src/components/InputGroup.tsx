@@ -22,7 +22,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
                 <input type={type}
                 className={cls(
                     'form-control transition-all duration-200 rounded',
-                    { 'is-invalid': error }
+                    { 'is-invalid': error } //에러가 있을때만 is-invalid 부트스트랩 css로 변형하라는 뜻
                 )}
                 placeholder={placeholder}
                 value={value}
@@ -30,6 +30,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
                 />
 
                 {error && <div className="invalid-feedback">{error}</div>}
+                {/* invalid-feedback 부트스트랩css가 적용된 형태로 error 메세지 출력 */}
             </div>
             </div>
         </div>

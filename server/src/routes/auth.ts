@@ -2,9 +2,23 @@ import { Request, Response, Router } from "express";
 import User from "../entities/User";
 import { validate } from "class-validator";
 
+interface ErrorObject {
+    property: string;
+    constraints: { [key: string]: string };
+  }
+  
+
+  const mapError = (errors: Object[]) => {
+    return errors.reduce((prev:any, err:any) => {
+         prev[err.property] = Object.entries(err.constraints)[0][1];
+         return prev;
+        },{});
+}
+
 const register = async (req: Request, res: Response) => {
-    const {email, username, password} = req.body;
-    // console.log('email', email);
+    const {email, username, password, nickname} = req.body;
+    console.log('email', email);
+    console.log('nickname', nickname);
 
     try {
         let errors: any = {};
@@ -24,29 +38,28 @@ const register = async (req: Request, res: Response) => {
         user.email = email; //user 객체의 email 필드에 email 변수값 할당
         user.username = username;
         user.password = password;
+        user.nickname = nickname;
         //const user = new User ({email, username, password});랑 기능적으로는 같지만, User 클래스의 생성자가
         // 해당 형식의 매개변수를 받도록 이미 설계가 돼있어야함.
 
         //엔티티에 정해놓은 조건으로 user 데이터의 유효성 검사하기
         errors = await validate(user);
+        if (errors.length > 0) {
+            return res.status(400).json(mapError(errors));
+        }
+        //validate 함수에서 에러가 있다면 mapError 함수를 호출하여 에러를 response 반환. db에 저장되지 않음
 
         await user.save(); //유저 정보를 User table에 저장
-
         return res.json(user); //저장된 유저 정보 response
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({error: "서버에 문제가 있습니다."});
+        return res.status(500).json({error});
         
     }
 };
 
-const mapErrors = (errors: Object[]) => {
-    return errors.reduce((prev:any, err: any) => {
-        prev[err.property] = Object.entries(err.constraints)[0][1];
-        return prev;
-    }, {}); //두번째 인자가 초기값인 빈 객체{}라는 뜻
-};
+
 
 const router = Router();
 router.post('/register', register);
