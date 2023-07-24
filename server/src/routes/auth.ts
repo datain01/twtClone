@@ -1,11 +1,16 @@
 import { Request, Response, Router } from "express";
+import { isEmpty, validate } from "class-validator";
 import User from "../entities/User";
-import { validate } from "class-validator";
+import  bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import cookie from 'cookie';
+
 
 interface ErrorObject {
     property: string;
     constraints: { [key: string]: string };
   }
+
   
 
   const mapError = (errors: Object[]) => {
@@ -13,7 +18,11 @@ interface ErrorObject {
          prev[err.property] = Object.entries(err.constraints)[0][1];
          return prev;
         },{});
-}
+    }
+    
+    const me = async (_: Request, res: Response) => {
+        return res.json(res.locals.user);
+      };
 
 const register = async (req: Request, res: Response) => {
     const {email, username, password, nickname} = req.body;
@@ -59,9 +68,61 @@ const register = async (req: Request, res: Response) => {
     }
 };
 
+const login = async (req: Request, res: Response) => {
+    const { username, password } = req.body;
+
+    try {
+        let errors: any = {};
+
+        //비워져있는지 확인하고, 비워져있다면 프론트로 에러 응답 반환
+        if (isEmpty(username)) {
+            errors.username = "유저명을 입력해주세요.";
+        }
+        if (isEmpty(password)) {
+            errors.password = "비밀번호를 입력해주세요.";
+        }
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json(errors);
+        }
+
+        const user = await User.findOneBy({username});
+        //username을 통해 유저의 정보가 담긴 row를 확인하고 해당 유저의 정보를 모두 user 객체에 담음
+        if (!user) {
+            return res.status(404).json({username: "유저가 존재하지 않습니다."});
+        }
+        
+        //유저가 있다면, 비밀번호가 일치하는지 확인
+        const passwordMatch = await bcrypt.compare (password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({password: "비밀번호가 잘못되었습니다."});
+        }
+        
+        //비밀번호가 맞으면 토큰 생성
+        const token = jwt.sign({username}, process.env.JWT_SECRET); //.env에서 가져옴
+
+        //쿠키를 저장함
+        res.set(
+            "Set-Cookie", 
+            cookie.serialize("token", token, {
+            httpOnly: true,
+            maxAge: 60 * 60 * 24,
+            path: "/"
+        })
+        );
+
+        return res.json({user, token});
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error});
+    }
+}
+
 
 
 const router = Router();
 router.post('/register', register);
+router.post("/login", login);
 
 export default router;
