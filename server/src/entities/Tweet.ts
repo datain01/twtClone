@@ -26,8 +26,8 @@ export default class Tweet extends BaseEntity {
     @Length(1, 300, {message: "300자 초과 불과"})
     content: string;
 
-    @Column()
-    subName: string;
+    // @Column()
+    // tweetName: string;
 
     @Column()
     username: string;
@@ -43,11 +43,12 @@ export default class Tweet extends BaseEntity {
     replies: Reply[];
 
     // 트윗의 좋아요
+    @Exclude()
     @OneToMany (() => Like, (like)=>like.tweet)
     likes: Like[];
 
     @Expose() get url(): string {
-        return `${this.subName}/${this.identifier}/${this.slug}`
+        return `${this.identifier}/${this.slug}`
     }
 
     //답글수
@@ -74,7 +75,8 @@ export default class Tweet extends BaseEntity {
     makeIdAndSlug() {
         this.identifier = makeId(7);
         const textPreview = this.content.slice(0, 10);
-        this.slug = slugify(textPreview);
+        const translatedText = transliterate(textPreview);
+        this.slug = slugify(translatedText);
     }
 
     // 트윗의 알티

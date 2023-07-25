@@ -63,7 +63,7 @@ const Login = () => {
                     
                     <small>
                         아직 가입하지 않았나요?
-                        <Link href="/login">
+                        <Link href="/register">
                             <span className="m1-1 text-blue-500 uppercase">회원가입</span>
                         </Link>
                     </small>

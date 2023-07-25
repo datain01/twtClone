@@ -51,7 +51,7 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
         user:null,
         authenticated: false,
         loading: true}); //첫번째 인자: reducer, 두번째 인자: initial state
-        console.log(state);
+        
     
     const dispatch = (type: string, payload?: any) => {
         defaultDispatch({type, payload});
@@ -59,19 +59,19 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
 
     
 
-    // useEffect(() => {
-    //     async function loadUser() {
-    //         try {
-    //             const res = await axios.get("/auth/me");
-    //             dispatch("LOGIN", res.data);
-    //         } catch (error) {
-    //             console.log(error);
-    //         } finally {
-    //             dispatch("STOP_LOADING");
-    //         }
-    //     }
-    //     loadUser();
-    // }, [])
+    useEffect(() => {
+        async function loadUser() {
+            try {
+                const res = await axios.get("/auth/me");
+                dispatch("LOGIN", res.data);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                dispatch("STOP_LOADING");
+            }
+        }
+        loadUser();
+    }, [])
 
     return (<DispatchContext.Provider value={dispatch}>
         <StateContext.Provider value={state}>
