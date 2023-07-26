@@ -74,7 +74,7 @@ export default class Tweet extends BaseEntity {
     @BeforeInsert()
     makeIdAndSlug() {
         this.identifier = makeId(7);
-        const textPreview = this.content.slice(0, 10);
+        const textPreview = this.content.slice(0, 7);
         const translatedText = transliterate(textPreview);
         this.slug = slugify(translatedText);
     }
