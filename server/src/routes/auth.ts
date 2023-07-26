@@ -16,7 +16,7 @@ interface ErrorObject {
 
 
 
-  
+
 const logout = async ( _ : Request, res : Response) => {
     res.set (
         "Set-Cookie",
@@ -37,9 +37,11 @@ return errors.reduce((prev:any, err:any) => {
       return prev;
      },{});
  }
-    
+ 
+// 현재 로그인한 사용자의 정보 반환
 const me = async (_: Request, res: Response) => {
-     return res.json(res.locals.user);
+     return res.json(res.locals.user); 
+     //res.locals는 express에서 제공한 객체, .user는 posts.ts 미들웨어에서 온것
 };
 
 const register = async (req: Request, res: Response) => {

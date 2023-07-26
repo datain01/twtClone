@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-import {Bell, Envelope, HouseDoorFill, PencilSquare, Person, PersonBadge, PersonCircle, Search, ThreeDots, Twitter} from 'react-bootstrap-icons'
+import {Bell, Envelope, HouseDoorFill, PencilSquare, Person, Search, ThreeDots, Twitter} from 'react-bootstrap-icons'
 import Dropdown from 'react-bootstrap/Dropdown'
 import axios from 'axios'
 import { useAuthDispatch, useAuthState } from '@/context/auth'
@@ -71,7 +71,7 @@ const NavBar: React.FC = () => {
             </li>
 
             <li className='nav-item'>
-                <Link href="/tweets/create" 
+                <Link href="/post" 
                 className='nav-link py-3 border-bottom rounded-0' 
                 data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Post" data-bs-original-title="Post"
                 onClick={(e)=>{

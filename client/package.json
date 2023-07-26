@@ -28,6 +28,7 @@
     "react-bootstrap": "2.8.0",
     "react-bootstrap-icons": "1.10.3",
     "react-dom": "18.2.0",
+    "swr": "2.2.0",
     "typescript": "5.1.6"
   }
 }

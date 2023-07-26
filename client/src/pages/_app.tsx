@@ -5,6 +5,8 @@ import Axios from 'axios'
 import { AuthProvider } from '@/context/auth';
 import { useRouter } from 'next/router';
 import NavBar from '@/components/NavBar';
+import axios from 'axios';
+import {SWRConfig} from 'swr'
 
 export default function App({ Component, pageProps }: AppProps) {
   Axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/api";
@@ -17,14 +19,32 @@ export default function App({ Component, pageProps }: AppProps) {
   //즉, 현재 페이지가 로그인이나 회원가입 페이지인지 확인한 뒤 로그인/회원가입 페이지면 true 반환
 
   
+  const fetcher = async (url: string) => {
+    try {
+      const res = await axios.get(url);
+      return res.data;
+    } catch (error:any) {
+      throw error.response.data
+    }
+  }
 
-  return (<AuthProvider>
-    {/* login, register 페이지가 아니면 NavBar를 보여주고, 좌측에 9(3rem)의 공백을 띄움 */}
-    <div className={`d-flex ${authRoute ? '' : 'vh-100'}`}>
-        {!authRoute && <NavBar />}
-        <div className="flex-grow-1">
-          <Component {...pageProps} />
-        </div>
-      </div>    
-  </AuthProvider>)
+
+
+  return (
+  <SWRConfig
+    value={{
+      fetcher
+    }}
+    >
+    <AuthProvider>
+      {/* login, register 페이지가 아니면 NavBar를 보여주고, 좌측에 9(3rem)의 공백을 띄움 */}
+      <div className={`d-flex ${authRoute ? '' : 'vh-100'}`}>
+          {!authRoute && <NavBar />}
+          <div className="flex-grow-1">
+            <Component {...pageProps} />
+          </div>
+        </div>    
+    </AuthProvider>
+  </SWRConfig>
+  )
 }

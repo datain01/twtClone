@@ -37,6 +37,7 @@ export default class Tweet extends BaseEntity {
     @JoinColumn({ name: "username", referencedColumnName: "username" })
     user: User;
 
+
     // 트윗의 답글
     @Exclude()
     @OneToMany(() => Reply, (reply) => reply.tweet)
@@ -85,6 +86,12 @@ export default class Tweet extends BaseEntity {
 
     @Column({default: 0})
     retweetCount: number;
+
+    protected userRetweet: number;
+    setUserRetweet(user: User) {
+        const index = this.retweets?.findIndex(l => l.username === user.username);
+        this.userRetweet = index > -1 ? this.retweets[index].value : 0;
+    }
 
 
     
