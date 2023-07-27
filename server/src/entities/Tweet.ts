@@ -84,12 +84,15 @@ export default class Tweet extends BaseEntity {
     @OneToMany(() => Retweet, (retweet) => retweet.tweet)
     retweets: Retweet[];
 
-    @Column({default: 0})
-    retweetCount: number;
+    // 알티 스코어
+    @Expose() 
+    get retweetScore():number {
+        return this.retweets?.reduce((memo, curt) => memo + (curt.value || 0), 0);
+    }
 
     protected userRetweet: number;
     setUserRetweet(user: User) {
-        const index = this.retweets?.findIndex(l => l.username === user.username);
+        const index = this.retweets?.findIndex(r => r.username === user.username);
         this.userRetweet = index > -1 ? this.retweets[index].value : 0;
     }
 

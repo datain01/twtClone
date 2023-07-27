@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React, { FormEvent, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import Image from 'next/image'
-import { ArrowRepeat, Bookmark, Chat, Heart } from 'react-bootstrap-icons';
+import { ArrowRepeat, Bookmark, Chat, Heart, HeartFill } from 'react-bootstrap-icons';
 import { useAuthState } from '@/context/auth';
 import dayjs from 'dayjs';
 import 'dayjs-ext/locale/ko'
@@ -66,6 +66,28 @@ const TweetPage = () => {
             console.log(error)
         }
     }
+
+    const retweet = async (value: number, reply?: Reply) => {
+        if (!authenticated) router.push("/login");
+    
+        // 이미 리트윗을 했으면 리셋
+        if ((!reply && value === post?.userRetweet) ||
+        (reply && reply.userRetweet === value)) {
+            value = 0;
+        }
+        try {
+            await axios.post("/retweets", {
+                identifier,
+                slug,
+                replyIdentifier: reply?.identifier,
+                value
+            })
+            postMutate();
+            replyMutate();
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     dayjs.locale('ko');
   return (
@@ -86,7 +108,7 @@ const TweetPage = () => {
              {dayjs(post.createdAt).format('A HH:mm · YYYY년 MM월 DD일')}
             </p>
             <p>
-                리트윗, 좋아요 {post?.likeScore}
+                리트윗 {post?.retweetScore} 좋아요 {post?.likeScore}
             </p>
             <div className="d-flex justify-content-between">
             {/* 답글 버튼 */}
@@ -100,13 +122,20 @@ const TweetPage = () => {
                     }}>
                 <Chat width="20" height="20" fill="grey" />
             </button>
-            
-            <button type="button" className="btn btn-link text-muted">
-                <ArrowRepeat width="20" height="20" fill="grey" />
+            {/* 리트윗 */}
+            <button type="button" className="btn btn-link text-muted"
+            onClick={()  => retweet(1)}>
+                <ArrowRepeat width="20" height="20" fill={post.userRetweet ? "#38B2AC" : "grey"} />
             </button>
+            {/* 좋아요 */}
             <button type="button" className="btn btn-link text-muted"
                 onClick={()  => like(1)}>                
-                <Heart width="20" height="20" fill={post.userLike ? "red" : "grey"} />
+                {post.userLike ? (
+                    <HeartFill width="20" height="20" fill="red" />
+                    ) : (
+                    <Heart width="20" height="20" fill="grey" />
+                )}
+                
             </button>
             <button type="button" className="btn btn-link text-muted">
                 <Bookmark width="20" height="20" fill="grey" />
@@ -169,15 +198,20 @@ const TweetPage = () => {
                         {dayjs(reply!.createdAt).format('A HH:mm · YYYY년 MM월 DD일')}
                     </p>
                     <p>
-                        리트윗, 좋아요 {reply.likeScore}
+                        리트윗 {reply.retweetScore} 좋아요 {reply.likeScore}
                     </p>
                     <div className="d-flex justify-content-between">
-                        <button type="button" className="btn btn-link text-muted">
-                            <ArrowRepeat width="20" height="20" fill="grey" />
+                        <button type="button" className="btn btn-link text-muted"
+                        onClick={()  => retweet(1, reply)}>
+                        <ArrowRepeat width="20" height="20" fill={reply.userRetweet ? "green" : "grey"} />
                         </button>
                         <button type="button" className="btn btn-link text-muted"
                         onClick={() => like(1, reply)} >
-                            <Heart width="20" height="20" fill={reply.userLike ? "red" : "grey"} />
+                            {reply.userLike ? (
+                                <HeartFill width="20" height="20" fill="red" />
+                                ) : (
+                                <Heart width="20" height="20" fill="grey" />
+                            )}
                         </button>
                         <button type="button" className="btn btn-link text-muted">
                             <Bookmark width="20" height="20" fill="grey" />

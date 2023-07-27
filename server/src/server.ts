@@ -7,6 +7,7 @@ import {AppDataSource} from "./data-source"
 import authRoutes from './routes/auth'
 import postRoutes from './routes/posts'
 import likeRoutes from './routes/likes'
+import RetweetRoutes from './routes/retweets'
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -26,6 +27,7 @@ app.get("/", (_, res) => res.send("server running"));
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/likes", likeRoutes);
+app.use("/api/retweets", RetweetRoutes);
 
 let port = process.env.PORT || 4000;
 

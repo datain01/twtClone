@@ -35,6 +35,8 @@ export default class Reply extends BaseEntity {
     @ManyToOne(() => Tweet, (tweet) => tweet.replies, { nullable: false })
     tweet: Tweet;
 
+    
+    // 좋아요 시작!!!!!!
     // 트윗의 좋아요
     @Exclude()    
     @OneToMany (() => Like, (like)=>like.reply)
@@ -49,20 +51,18 @@ export default class Reply extends BaseEntity {
     }
 
     //좋아요수
-    @Expose() get likeScore(): number {
+    @Expose() 
+    get likeScore(): number {
         const initialValue = 0
         return this.likes?.reduce((previousValue, currentObject) =>
             previousValue + (currentObject.value || 0), initialValue)
     }
+    // 좋아요 끝!!!!!
 
-    @BeforeInsert()
-    makeId() {
-        this.identifier = makeId(8);
-    }
-
+    // 리트윗 시작!!!!!
     @Exclude()
     // 트윗의 리트윗
-    @OneToMany (() => Retweet, (retweet)=>retweet.tweet)
+    @OneToMany (() => Retweet, (retweet)=>retweet.reply)
     retweets: Retweet[];
 
     //유저가 리트윗을 눌렀는지 안눌렀는지 확인하기
@@ -70,6 +70,7 @@ export default class Reply extends BaseEntity {
 
     setUserRetweet(user: User) {
         const index = this.retweets.findIndex(r => r.username === user.username);
+        this.userRetweet = index > -1 ? this.retweets[index].value : 0;
         
     }
 
@@ -77,11 +78,16 @@ export default class Reply extends BaseEntity {
     @Expose() 
     get retweetScore():number {
         const initialValue = 0
-        return this.likes?.reduce((previousValue, currentObject) =>
+        return this.retweets?.reduce((previousValue, currentObject) =>
             previousValue + (currentObject.value || 0), initialValue)
     }
+    // 리트윗 끝!!!!!
 
-    
+    @BeforeInsert()
+    makeId() {
+        this.identifier = makeId(8);
+    }
+
 
 
 }
