@@ -14,7 +14,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     //타입스크립트의 !는 "non-null assertion"로 환경변수가 반드시 존재하며, null이나 undefined가 아니란 것을 알려줌
 
     const user = await User.findOneBy({username});
-    console.log('user token check', user);
+    // console.log('user token check', user);
     //위에서 추출한 username을 이용해서 데이터베이스에 해당 username이 있는지 확인.
     //여기서 await는 데이터베이스 쿼리가 완료될때까지 기다리라는 뜻
 

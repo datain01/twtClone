@@ -40,3 +40,18 @@ export interface Tweet {
     retweetScore?: number;
     replyCount?: number;
 }
+
+export interface Reply {
+    identifier: string;
+    content: string;
+    username: string;
+    createdAt: string;
+    updatedAt: string;
+    tweet?: Tweet;
+    user: User;
+
+    userLike: number;
+    likeScore: number;
+    userRetweet: number;
+    retweetScore: number;
+}

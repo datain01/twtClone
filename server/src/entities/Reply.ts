@@ -17,6 +17,7 @@ export default class Reply extends BaseEntity {
     @Column()
     identifier: string;
 
+
     @Column()
     @Length(1, 300, {message: "300자 초과 불과"})
     content: string;

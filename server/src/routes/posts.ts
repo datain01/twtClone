@@ -4,8 +4,61 @@ import authMiddleware from "../middlewares/auth";
 import { isEmpty } from "class-validator";
 import User from "../entities/User";
 import Tweet from "../entities/Tweet";
+import Reply from "../entities/Reply";
 
 
+// 답글 표시하기 api
+const getPostReplies = async (req: Request, res: Response) => {
+    const {identifier, slug} = req.params;
+
+    try {
+        const post = await Tweet.findOneByOrFail({identifier, slug}); //identifier, slug를 이용해 트윗의 데이터 찾음. 없으면 error catch
+        const replies = await Reply.find({ //위에서 찾아낸 트윗의 id를 이용해서 해당 트윗에 대한 모든 reply를 db에서 찾음
+            where: {tweetId: post.id},
+            order: {createdAt:"DESC"}, //내림차순으로 정렬
+            relations:["user", "likes", "retweets"] //좋아요과 리트윗 정보도 포함해서
+        });
+
+        if (res.locals.user) { //로그인한 사용자가 각 답글에 대해 좋아요/리트윗을 했는지 설정
+            replies.forEach((c) => c.setUserLike(res.locals.user))
+            replies.forEach((c) => c.setUserRetweet(res.locals.user))
+        }
+
+        return res.json(replies); //응답!!!!
+    } catch (error) {
+        console.log(error);
+        console.log("createPostReply 에러");
+        return res.status(500).json({error:"문제가 발생했습니다."});
+    }
+
+}
+
+// 답글 포스트하기 api
+const createPostReply = async (req: Request, res: Response) => {
+    const {identifier, slug} = req.params;
+    const content = req.body.content;
+
+    try {
+        const post = await Tweet.findOneByOrFail({identifier, slug});
+        const reply = new Reply();
+        reply.content = content;
+        reply.user = res.locals.user;
+        reply.tweet = post;
+
+        if (res.locals.user) {
+            post.setUserLike(res.locals.user);
+        }
+
+        await reply.save();
+        return res.json(reply);
+
+    } catch (error) {
+        console.log(error);
+        console.log("createPostReply 에러");
+        return res.status(404).json({error: "문제가 발생했습니다."})
+        
+    }
+}
 const getPost = async (req: Request, res: Response) => {
     const {identifier, slug} = req.params; //HTTP 요청의 URL 경로의 파라미터를 포함하는 객체
 
@@ -63,7 +116,12 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 
 const router = Router();
 
+router.get("/:identifier/:slug/replies", userMiddleware, getPostReplies);
+
 router.get("/:identifier/:slug", userMiddleware, getPost);
 router.post("/", userMiddleware, authMiddleware, createPost);
+
+// 답글 api
+router.post("/:identifier/:slug/replies", userMiddleware, createPostReply);
 
 export default router;

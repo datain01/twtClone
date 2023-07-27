@@ -29,23 +29,23 @@ const PostTweet = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-    <div className="mx-5 position-relative">
-        <label htmlFor="exampleFormControlTextarea1" className="form-label">유저사진</label>
-        <button className="btn btn-info position-absolute top-0 end-0 mt-2 text-light">
-            트윗하기
-            </button>
-        <textarea className="form-control mt-4"
-        id="exampleFormControlTextarea1"
-        style={{
-            width: "100%",
-            height: "200px",
-            resize: "none"
-        }}
-        placeholder ="무슨 일이 일어나고 있나요?"
-        value={content}
-        onChange={(e)=>setContent(e.target.value)}
-        ></textarea>
-    </div>
+        <div className="mx-5 position-relative">
+            <label htmlFor="exampleFormControlTextarea1" className="form-label">유저사진</label>
+            <button className="btn btn-info position-absolute top-0 end-0 mt-2 text-light">
+                트윗하기
+                </button>
+            <textarea className="form-control mt-4"
+            id="exampleFormControlTextarea1"
+            style={{
+                width: "100%",
+                height: "200px",
+                resize: "none"
+            }}
+            placeholder="무슨 일이 일어나고 있나요?"
+            value={content}
+            onChange={(e)=>setContent(e.target.value)}
+            ></textarea>
+        </div>
     </form>
     
   )
