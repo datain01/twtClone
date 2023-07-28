@@ -8,6 +8,7 @@ import { Tweet } from '@/types'
 import useSWRInfinite from 'swr/infinite'
 import useSWR from 'swr'
 import TweetCard from '@/components/TweetCard'
+import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,15 +38,52 @@ const Home: NextPage = () => {
   //모든 페이지의 트윗 데이터를 단일 배열로 합침
   //data가 존재하면 빈 배열 ([] as Tweet[])에 data의 모든 요소를 연결함(concat)
 
+  // 스크롤을 내려서 observedPost에 닿으면 다음 페이지 포스트들을 가져오기 위한 포스트 id state
+  const [observedTweet, setObservedTweet] = useState("");
+
+  useEffect(() => {
+    // 포스트가 없으면 바로 return
+    if (!tweets || tweets.length === 0) return;
+
+    // tweets 배열에서 마지막 tweet id를 가져옴
+    const id = tweets[tweets.length - 1].identifier;
+
+    // tweets 배열에 tweet이 추가돼서 마지막 tweet이 바뀌면, 바뀐 tweet중 마지막을 observedPost로 대체
+    if (id !== observedTweet) {
+      setObservedTweet(id);
+      observeElement(document.getElementById(id));
+    }
+
+  }, [tweets]);
+
+  const observeElement = (element: HTMLElement | null) => { 
+    //HTMLElement: 웹 페이지의 각 요소를 나타내는 객체 (<div>, <span> 등의 태그가 있다면, 각각이 HTMLElement 객체로 표현됨)
+    if (!element) return;
+
+    //IntersectionObserver: 자바스크립트 API. 특정 html 요소 (element)가 뷰포트와 교차하는지 감시
+    const observer = new IntersectionObserver(//첫번째 매개변수: 콜백함수. 관찰 대상 요소가 뷰포트와 교차할때마다 호출
+      (entries) => {
+        if (entries[0].isIntersecting === true) { //entries[0].isIntersecting이 속성을 확인, 요소가 뷰포트와 교차하는지 확인함.
+          //true가 되면 콘솔에 메시지 출력 후 page 상태를 증가
+          console.log("Reached bottom of post");
+          setPage(page + 1);
+          observer.unobserve(element); //요소에 대한 관찰 중지
+        }
+      },
+      {threshold: 1} //두번째 매개변수: 옵션 객체. threshold는 교차영역 비율을 뜻함 (0.0~1.0).
+      // 1은 요소의 전체 영역이 뷰포트와 교차했을때 콜백함수를 호출하도록함
+    );
+      observer.observe(element) //를 호출하여 요소에 대한 관찰 시작
+  }
+
   return (
-    <div>
+    <div style={{height:"100vh", overflow:"auto"}}>
       {isInitialLoading && <p className='text-lg text-center'>Loading...</p>}
       {tweets?.map((tweet)=>(
         <TweetCard
         post={tweet}
         key={tweet.identifier}
         mutate={mutate}
-        // swr을 넘겨줘야함...
         />
       ))}
       {isValidating && tweets.length > 0 && (
@@ -53,8 +91,6 @@ const Home: NextPage = () => {
       )}
     </div>
      
-
-  
   )
 }
 

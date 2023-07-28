@@ -181,7 +181,7 @@ const TweetPage = () => {
             {/* 본 트윗 끝 */}
 
             {/* 답글 리스트 시작 */}
-            <div className='mt-5'>
+            <div className='mx-3 mt-5'>
             {replies?.map (reply => (
                 <div className='flex mt-3 mb-5' key = {reply.identifier}>
 

@@ -18,7 +18,8 @@ const PostTweet = () => {
                 content
             })
 
-            router.push (`/${post.identifier}/${post.slug}`);
+            router.push ("/"); //트윗을 올리면 메인페이지로 리다이렉트
+            // router.push (`/${post.identifier}/${post.slug}`);
         } catch (error:any) {
             console.log(error);
             setErrors(error.response.data);

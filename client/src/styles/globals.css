@@ -80,7 +80,8 @@
 }
 
 html {
-  width: 40%;
+  width: 30%;
+  min-width: 600px;
   margin: 0 auto;
   overflow-x: hidden;
 }
@@ -111,6 +112,17 @@ a {
   }
 }
 
-.pl-45 {
-  padding-left:4.5rem;
+/* Chrome, Safari, Edge */
+div::-webkit-scrollbar {
+  width: 8px;
 }
+
+div::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+div::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 20px;
+}
+
