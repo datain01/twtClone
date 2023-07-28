@@ -9,23 +9,6 @@ export interface User {
     followers: string[];
 }
 
-export interface Post {
-    identifier: string;
-    slug: string;
-    content: string;
-    // tweetName: string;
-    username: string;
-    createdAt: string;
-    updatedAt: string;
-    
-    url: string;
-    userLike?: number;
-    likeScore?: number;
-    userRetweet?: number;
-    retweetScore?: number;
-    replyCount?: number;    
-}
-
 export interface Tweet {
     identifier: string;
     slug: string;
@@ -44,7 +27,7 @@ export interface Tweet {
 export interface Reply {
     identifier: string;
     content: string;
-    username: string;
+    // username: string;
     createdAt: string;
     updatedAt: string;
     tweet?: Tweet;

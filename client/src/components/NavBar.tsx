@@ -41,19 +41,19 @@ const NavBar: React.FC = () => {
             </li>
 
             <li className='nav-item'>
-                <Link href="/search" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Search" data-bs-original-title="Search">
+                <Link href="#" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Search" data-bs-original-title="Search">
                     <Search width="24" height="24" fill="black" />
                 </Link>            
             </li>
 
             <li className='nav-item'>
-                <Link href="/alarm" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Alarm" data-bs-original-title="Alarm">
+                <Link href="#" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Alarm" data-bs-original-title="Alarm">
                     <Bell width="24" height="24" fill="black" />
                 </Link>            
             </li>
 
             <li className='nav-item'>
-                <Link href="/dm" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dm" data-bs-original-title="Dm">
+                <Link href="#" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dm" data-bs-original-title="Dm">
                     <Envelope width="24" height="24" fill="black" />
                 </Link>            
             </li>
@@ -65,7 +65,7 @@ const NavBar: React.FC = () => {
             </li>
 
             <li className='nav-item'>
-                <Link href="/options" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Option" data-bs-original-title="Option">
+                <Link href="#" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Option" data-bs-original-title="Option">
                     <ThreeDots width="24" height="24" fill="black" />
                 </Link>            
             </li>

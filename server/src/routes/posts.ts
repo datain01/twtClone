@@ -6,6 +6,30 @@ import User from "../entities/User";
 import Tweet from "../entities/Tweet";
 import Reply from "../entities/Reply";
 
+//메인 홈에 트윗들 띄우기
+const getTweets = async (req: Request, res: Response) => {
+    const currentPage: number = (req.query.page || 0) as number;
+    const perPage: number = (req.query.count || 8) as number;
+
+    try {
+        const tweets = await Tweet.find ({
+            order: {createdAt: "DESC"},
+            relations: ["user", "likes", "retweets", "replies"],
+            skip: currentPage * perPage,
+            take: perPage,
+        });
+
+        if (res.locals.user) {
+            tweets.forEach((p)=>p.setUserLike(res.locals.user));
+            tweets.forEach((p)=>p.setUserRetweet(res.locals.user));
+        }
+        
+        return res.json(tweets);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error: "페이지를 가져오는 데 문제가 발생했습니다."})
+    }
+}
 
 // 답글 표시하기 api
 const getPostReplies = async (req: Request, res: Response) => {
@@ -123,5 +147,7 @@ router.post("/", userMiddleware, authMiddleware, createPost);
 
 // 답글 api
 router.post("/:identifier/:slug/replies", userMiddleware, createPostReply);
+
+router.get("/", userMiddleware, getTweets);
 
 export default router;

@@ -91,7 +91,7 @@ const TweetPage = () => {
     
     dayjs.locale('ko');
   return (
-    // 나중에 헤더 만들어서 넣고 카드는 없애자
+    // 나중에 헤더 만들어서 넣자
     <div className="mt-5 ms-4"> 
             {/* 본 트윗 시작*/}
             {post && post.user &&(
@@ -115,7 +115,7 @@ const TweetPage = () => {
             <button type="button" className="btn btn-link text-muted" 
                 onClick={()=>{
                     if (authenticated) {
-                        setShowReply(true);
+                        setShowReply(prevShowReply => !prevShowReply);
                     } else {
                         router.push("/login")
                     }                    
@@ -190,7 +190,7 @@ const TweetPage = () => {
                         alt="user" width="40" height="40" className='rounded-circle'/>
                         <div className='ms-3'>
                             <strong >{reply.user.nickname}</strong>
-                            <p className="mb-0 text-muted">@{reply.username}</p>
+                            <p className="mb-0 text-muted">@{reply.user.username}</p>
                         </div>
                     </div>
                     <p className="mt-2 fs-5">{reply.content}</p>

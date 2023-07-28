@@ -1,6 +1,5 @@
-import { Post } from '@/types';
+import { Tweet } from '@/types';
 import axios from 'axios';
-import { trace } from 'console';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { FormEvent, useState } from 'react'
@@ -15,7 +14,7 @@ const PostTweet = () => {
         e.preventDefault();
         
         try {
-            const {data: post} = await axios.post<Post>("/posts", {
+            const {data: post} = await axios.post<Tweet>("/posts", {
                 content
             })
 

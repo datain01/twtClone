@@ -96,13 +96,4 @@ export default class Tweet extends BaseEntity {
         this.userRetweet = index > -1 ? this.retweets[index].value : 0;
     }
 
-
-    
-
-    
-
-    
-
-    
-
 }
