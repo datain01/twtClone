@@ -3,12 +3,14 @@ import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
 import {AppDataSource} from "./data-source"
+import cookieParser from "cookie-parser";
 
 import authRoutes from './routes/auth'
 import postRoutes from './routes/posts'
 import likeRoutes from './routes/likes'
 import RetweetRoutes from './routes/retweets'
-import cookieParser from "cookie-parser";
+import userRoutes from './routes/users'
+
 
 const app = express();
 const origin = "http://localhost:3000";
@@ -28,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/likes", likeRoutes);
 app.use("/api/retweets", RetweetRoutes);
+app.use("/api/users", userRoutes);
 
 let port = process.env.PORT || 4000;
 

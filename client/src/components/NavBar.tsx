@@ -14,6 +14,8 @@ const NavBar: React.FC = () => {
     const dispatch = useAuthDispatch();
     const router = useRouter();
 
+    const {user} = useAuthState();
+
     const logout = () => {
         axios.post("/auth/logout")
         .then(() => { //then 메서드는 자바스크립트에서 Promise가 성공적으로 완료됐을때 호출되는 콜백함수
@@ -59,7 +61,7 @@ const NavBar: React.FC = () => {
             </li>
 
             <li className='nav-item'>
-                <Link href="/user" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="User" data-bs-original-title="User">
+                <Link href={`/user/${user?.username}`} className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="User" data-bs-original-title="User">
                     <Person width="24" height="24" fill="black" />
                 </Link>            
             </li>

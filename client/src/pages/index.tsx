@@ -81,7 +81,7 @@ const Home: NextPage = () => {
       {isInitialLoading && <p className='text-lg text-center'>Loading...</p>}
       {tweets?.map((tweet)=>(
         <TweetCard
-        post={tweet}
+        tweet={tweet}
         key={tweet.identifier}
         mutate={mutate}
         />

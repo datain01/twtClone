@@ -31,7 +31,7 @@ const PostTweet = () => {
     <form onSubmit={handleSubmit}>
         <div className="mx-5 position-relative">
             <label htmlFor="exampleFormControlTextarea1" className="form-label">유저사진</label>
-            <button className="btn btn-info position-absolute top-0 end-0 mt-2 text-light">
+            <button className="btn btn-info position-absolute top-0 end-0 mt-2 text-light tweet-fixed-button">
                 트윗하기
                 </button>
             <textarea className="form-control mt-4"

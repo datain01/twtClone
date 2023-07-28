@@ -8,6 +8,7 @@ import { useAuthState } from '@/context/auth';
 import dayjs from 'dayjs';
 import 'dayjs-ext/locale/ko'
 import axios from 'axios';
+import Link from 'next/link';
 
 
 const TweetPage = () => {
@@ -92,16 +93,20 @@ const TweetPage = () => {
     dayjs.locale('ko');
   return (
     // 나중에 헤더 만들어서 넣자
-    <div className="mt-5 ms-4"> 
+    <div className="mt-5 ms-4" style={{height:"96vh", overflow:"auto"}}> 
             {/* 본 트윗 시작*/}
             {post && post.user &&(
                 <>
             <div className="d-flex">
+            <Link href={`/user/${post.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
             <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="user" width="45" height="45" className='rounded-circle'/>
+            </Link>
+            <Link href={`/user/${post.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
             <div className='ms-3'>
-                <strong >{post.user.nickname}</strong>
+                <strong style={{color:"black"}}>{post.user.nickname}</strong>
                 <p className="mb-0 text-muted">@{post.user.username}</p>
             </div>
+            </Link>
             </div>
             <p className="mt-2 fs-4">{post.content}</p>
             <p className='fs-6 text-muted'>
@@ -169,8 +174,8 @@ const TweetPage = () => {
                                 
                                 </div>
                                 <div className='col-2'>
-                                <button className="btn btn-info text-light mt-2">
-                                    트윗하기
+                                <button className="btn btn-info text-light mt-2 reply-fixed-button">
+                                    트윗
                                     </button>
                                 </div>
                             </div>
@@ -186,12 +191,16 @@ const TweetPage = () => {
                 <div className='flex mt-3 mb-5' key = {reply.identifier}>
 
                     <div className="d-flex">
+                    <Link href={`/user/${reply.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
                         <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" 
                         alt="user" width="40" height="40" className='rounded-circle'/>
+                        </Link>
+                        <Link href={`/user/${reply.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
                         <div className='ms-3'>
-                            <strong >{reply.user.nickname}</strong>
+                            <strong style={{color:"black"}}>{reply.user.nickname}</strong>
                             <p className="mb-0 text-muted">@{reply.user.username}</p>
                         </div>
+                        </Link>
                     </div>
                     <p className="mt-2 fs-5">{reply.content}</p>
                     <p className='fs-6 text-muted'>

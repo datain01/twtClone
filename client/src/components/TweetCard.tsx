@@ -10,12 +10,12 @@ import { ArrowRepeat, Bookmark, Chat, Heart, HeartFill } from 'react-bootstrap-i
 
 
 interface TweetCardProps {
-    post: Tweet
+    tweet: Tweet
     mutate?: ()=>void //mutate는 index.tsx에서 넘겨주는거임...
 }
 
 const TweetCard = ({
-  post: {
+  tweet: {
     identifier,
     slug,
     content,
@@ -82,18 +82,22 @@ const TweetCard = ({
 
 
   return (
-        <div className='card' onClick={() => router.push(`/${identifier}/${slug}`)}>
+        <div className='card' onClick={() => router.push(`/${identifier}/${slug}`)} >
           <div className='card-body'>
               <div className="mt-3 ms-4"> 
                     {/* 본 트윗 시작*/}
                     
                         <>
                     <div className="d-flex">
+                    <Link href={`/user/${user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
                     <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="user" width="45" height="45" className='rounded-circle'/>
+                    </Link>
+                    <Link href={`/user/${user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
                     <div className='ms-3'>
-                        <strong >{user?.nickname}</strong>
+                        <strong style={{color:"black"}}>{user?.nickname}</strong>
                         <p className="mb-0 text-muted">@{user?.username}</p>
                     </div>
+                    </Link>
                     </div>
                     <p className="mt-2 fs-5" onClick={(e) => 
                           e.stopPropagation()}>
@@ -169,7 +173,7 @@ const TweetCard = ({
                                         
                                         </div>
                                         <div className='col-2'>
-                                        <button className="btn btn-info text-light mt-2">
+                                        <button className="btn btn-info text-light mt-2 reply-fixed-button">
                                             트윗
                                             </button>
                                         </div>
