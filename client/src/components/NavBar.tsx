@@ -104,8 +104,14 @@ const NavBar: React.FC = () => {
             </Dropdown.Toggle> 
             
             <Dropdown.Menu>
-                <Dropdown.Item href="#">Settings</Dropdown.Item>
-                <Dropdown.Item href={`/user/${user?.username}`}>Profile</Dropdown.Item>
+                <Dropdown.Item href="#">Settings</Dropdown.Item>    
+                <Dropdown.Item href={`/user/${user?.username}`}
+                onClick={(e)=>{
+                    if (!authenticated) {
+                        e.preventDefault();
+                        router.push("login");
+                    }
+                }}>Profile</Dropdown.Item>
                 <Dropdown.Divider />
                 {!loading && authenticated ? (
                 <Dropdown.Item onClick={logout}>Sign Out</Dropdown.Item>

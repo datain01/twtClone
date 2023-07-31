@@ -128,7 +128,7 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
         post.user = user;
 
         await post.save();
-        return res.json(post); //클라로 응답
+        return res.json({post, user}); //클라로 응답
     } catch (error) {
         console.log (error, "포스트 생성중 오류가 발생했습니다.")
         return res.status(500).json ({error: "포스트 생성중 오류가 발생했습니다."});

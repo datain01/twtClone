@@ -1,15 +1,18 @@
+import { useAuthState } from '@/context/auth';
 import { Tweet } from '@/types';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { FormEvent, useState } from 'react'
 
 const PostTweet = () => {
+    const router = useRouter();
     const [content, setContent] = useState('');
     const [errors, setErrors] = useState<any>({});
 
-    const router = useRouter();
-
+    const {user} = useAuthState();
+    
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         
@@ -30,11 +33,14 @@ const PostTweet = () => {
   return (
     <form onSubmit={handleSubmit}>
         <div className="mx-5 position-relative">
-            <label htmlFor="exampleFormControlTextarea1" className="form-label">유저사진</label>
-            <button className="btn btn-info position-absolute top-0 end-0 mt-2 text-light tweet-fixed-button">
-                트윗하기
-                </button>
-            <textarea className="form-control mt-4"
+            <div className='mt-3'>
+                <Image src={user?.profileUrl || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
+                alt="user" width="50" height="50" className='rounded-circle'/>
+                    <button className="btn btn-info position-absolute top-0 end-0 text-light tweet-fixed-button">
+                        트윗하기
+                    </button>
+            </div>
+            <textarea className="form-control mt-2"
             id="exampleFormControlTextarea1"
             style={{
                 width: "100%",
