@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-import {Bell, Envelope, HouseDoorFill, PencilSquare, Person, Search, ThreeDots, Twitter} from 'react-bootstrap-icons'
+import {Bell, Envelope, HouseDoor, PencilSquare, Person, Search, ThreeDots, Twitter} from 'react-bootstrap-icons'
 import Dropdown from 'react-bootstrap/Dropdown'
 import axios from 'axios'
 import { useAuthDispatch, useAuthState } from '@/context/auth'
@@ -38,7 +38,7 @@ const NavBar: React.FC = () => {
         <ul className='nav nav-pills nav-plush flex-column mb-auto text-center'>
             <li className='nav-item'>
                 <Link href="/" className='nav-link py-3 border-bottom rounded-0' aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="Home">
-                    <HouseDoorFill width="24" height="24" fill="black" />
+                    <HouseDoor width="24" height="24" fill="black" />
                 </Link>            
             </li>
 
@@ -61,7 +61,15 @@ const NavBar: React.FC = () => {
             </li>
 
             <li className='nav-item'>
-                <Link href={`/user/${user?.username}`} className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="User" data-bs-original-title="User">
+                <Link href={`/user/${user?.username}`} className='nav-link py-3 border-bottom rounded-0' 
+                data-bs-toggle="tooltip" data-bs-placement="right" aria-label="User" data-bs-original-title="User"
+                onClick={(e)=>{
+                    if (!authenticated) {
+                        e.preventDefault();
+                        router.push("login");
+                    }
+                }}
+                >
                     <Person width="24" height="24" fill="black" />
                 </Link>            
             </li>
