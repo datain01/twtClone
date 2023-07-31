@@ -32,6 +32,8 @@ app.use("/api/likes", likeRoutes);
 app.use("/api/retweets", RetweetRoutes);
 app.use("/api/users", userRoutes);
 
+app.use(express.static("public"));
+
 let port = process.env.PORT || 4000;
 
 app.listen(port, async () => {

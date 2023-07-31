@@ -1,16 +1,103 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import userMiddleware from "../middlewares/user";
 import authMiddleware from "../middlewares/auth";
 import User from "../entities/User";
 import Tweet from "../entities/Tweet";
 import Reply from "../entities/Reply";
+import multer, { FileFilterCallback } from "multer";
+import { makeId } from "../utils/helpers";
+import path from "path";
+import { unlinkSync } from "fs";
+
+// 이미지 파일을 저장해두는 함수
+const upload = multer ({
+    storage: multer.diskStorage({ //파일을 디스크에 저장하기 위해 설정 시작. multer.diskStorage가 디스크 저장 엔진을 제공함
+        destination: "public/images", //업로드된 파일을 public/images라는 디렉토리에 파일을 저장하도록 설정
+        filename: (_, file, callback) => { //업로드된 파일의 이름을 어떻게 지정할지 정의하는 함수
+            const name = makeId(10); //makeId 함수를 호출하여 10자리의 고유한 id를 생성, name 변수에 할당
+            callback(null, "profile-" + name + path.extname(file.originalname))
+            //콜백 함수를 호출하여 파일의 최종 이름 결정. profile-name변수.원래확장자
+        },
+    }),
+    fileFilter: (_, file:any, callback:FileFilterCallback) => {
+        //업로드된 파일 형식 검사하는 함수 정의
+        if(file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+            callback(null, true); //형식이 올바르면 콜백 함수를 호출하여 업로드를 계속함
+        } else {
+            callback(new Error ("이미지 형식이 아닙니다."));
+            //형식이 틀리면 오류 메세지 전달, 업로드 중단
+        }
+    },
+});
+
+const uploadProfileImage = async (req: Request, res: Response) => {
+    const user: User = res.locals.user; //현재 요청을 보낸 사용자의 정보를 user변수에 저장
+    try {
+        const type = req.body.type;
+        //클라에서 보낸 본문에서 type 값을 추출
+        // 파일 유형을 지정하지 않았을 때는 업로드 된 파일 삭제. 여기서는 프로필 사진만 받음
+        if (type !== "profile") {
+            if (!req.file?.path) { //업로드된 파일의 경로가 없는 경우 체크
+                return res.status(400).json({error: "유효하지 않은 파일 형식 입니다."});
+            }
+            unlinkSync(req.file.path); //잘못된 파일 형식이 업로드 된 경우, 파일을 서버에서 삭제
+            return res.status(400).json({error: "잘못된 파일 형식입니다."})
+        }
+
+        let oldProfileUrn:string = "";
+        if (type === "profile") {
+            // 현재 사용중인 profile urn 저장, 새로운 파일 이름을 urn으로 넣어줌
+            oldProfileUrn = user.profileUrn || ""; 
+            user.profileUrn = req.file?.filename || "";
+        }
+        await user.save();
+
+        if (oldProfileUrn !== "") {
+            const fullFilename = path.resolve(
+                process.cwd(),
+                "public",
+                "images",
+                oldProfileUrn
+            );
+            unlinkSync(fullFilename);
+        }
+
+        const imageUrl = `${process.env.APP_URL}/images/${user.profileUrn}`;
+        console.log("Generated Image URL:", imageUrl);
+        
+
+        return res.json(user);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error:"문제가 발생했습니다."});
+    }
+    
+}
+
+const ownProfile = async (req:Request, res:Response, next:NextFunction) => {
+    const user: User = res.locals.user; //현재 접속한 유저
+    const username: string = req.params.username; //URL에서 가져온 유저네임
+    try {
+        const profileUser = await User.findOneOrFail ({where: {username: username}});
+        if (profileUser.username !== user.username) {
+            return res.status(403).json({error: "이 프로필을 수정할 권한이 없습니다."});
+        }
+        next();
+    } catch (error) {
+        console.log(error);
+        console.log("본인 확인 오류")
+        return res.status(500).json({error: "문제가 발생했습니다."});
+    }
+}
+
+
 
 const getUserData = async (req: Request, res: Response) => {
     try {
         //유저 정보 가져오기
         const user = await User.findOneOrFail({
             where: { username: req.params.username },
-            select: ["username", "createdAt", "nickname"]
+            select: ["username", "createdAt", "nickname", "profileUrn"]
         })
 
         //해당 유저가 쓴 포스트 정보 가져오기
@@ -62,8 +149,18 @@ const getUserData = async (req: Request, res: Response) => {
     }
 }
 
+
+
 const router = Router();
 
+
 router.get("/:username", userMiddleware, getUserData);
+router.post(
+    "/:username/upload", 
+    userMiddleware, 
+    authMiddleware, 
+    ownProfile,
+    upload.single("file"), 
+    uploadProfileImage);
 
 export default router;

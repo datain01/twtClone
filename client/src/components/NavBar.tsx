@@ -91,12 +91,13 @@ const NavBar: React.FC = () => {
         
         <Dropdown>
         <Dropdown.Toggle variant="transparent" style={{backgroundColor: 'transparent', border: 'none'}}>
-                <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="user" width="40" height="40" className='rounded-circle'/>
-            </Dropdown.Toggle>
+                <Image src={user?.profileUrl || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} alt="user" width="40" height="40" className='rounded-circle'/>
+                {/* 로그인이 안됐으면 기본 이미지 표시 */}
+            </Dropdown.Toggle> 
             
             <Dropdown.Menu>
                 <Dropdown.Item href="#">Settings</Dropdown.Item>
-                <Dropdown.Item href="/user">Profile</Dropdown.Item>
+                <Dropdown.Item href={`/user/${user?.username}`}>Profile</Dropdown.Item>
                 <Dropdown.Divider />
                 {!loading && authenticated ? (
                 <Dropdown.Item onClick={logout}>Sign Out</Dropdown.Item>

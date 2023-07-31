@@ -20,6 +20,7 @@
     "bootstrap": "5.3.0",
     "bootstrap-icons": "1.10.5",
     "classnames": "2.3.2",
+    "cls": "0.1.5",
     "dayjs": "1.11.9",
     "dayjs-ext": "2.2.0",
     "eslint": "8.45.0",

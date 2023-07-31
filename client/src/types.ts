@@ -7,6 +7,9 @@ export interface User {
     tweets: string;
     followings: string[];
     followers: string[];
+
+    profileUrn: string;
+    profileUrl: string;
 }
 
 export interface Tweet {

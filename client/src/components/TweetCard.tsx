@@ -90,7 +90,12 @@ const TweetCard = ({
                         <>
                     <div className="d-flex">
                     <Link href={`/user/${user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
-                    <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="user" width="45" height="45" className='rounded-circle'/>
+                    <Image 
+                    src={user?.profileUrl} 
+                    alt="프로필 사진" 
+                    width={50}
+                    height = {50}
+                    className="rounded-circle" />
                     </Link>
                     <Link href={`/user/${user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
                     <div className='ms-3'>

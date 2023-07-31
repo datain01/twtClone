@@ -99,6 +99,8 @@ const TweetPage = () => {
                 <>
             <div className="d-flex">
             <Link href={`/user/${post.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
+        
+                
             <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="user" width="45" height="45" className='rounded-circle'/>
             </Link>
             <Link href={`/user/${post.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>

@@ -75,7 +75,7 @@ export default class User extends BaseEntity {
     profileUrn: string;
 
     @Expose()
-    get imageUrl(): string {
+    get profileUrl(): string {
         return this.profileUrn ? `${process.env.APP_URL}/images/${this.profileUrn}` :
             "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
     }
