@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { ArrowRepeat, Bookmark, Chat, Heart, HeartFill, ThreeDots } from 'react-bootstrap-icons';
 import { useAuthState } from '@/context/auth';
 import dayjs from 'dayjs';
-import 'dayjs-ext/locale/ko'
+import timezone from 'dayjs/plugin/timezone'
 import axios from 'axios';
 import Link from 'next/link';
 import  Dropdown  from 'react-bootstrap/Dropdown';
@@ -101,8 +101,7 @@ const TweetPage = () => {
             console.log("트윗 삭제 중 오류", error);
         }
     }
-    
-    dayjs.locale('ko');
+
   return (
     // 나중에 헤더 만들어서 넣자
     <div className="mt-5 ms-4" style={{height:"96vh", overflow:"auto"}}> 
@@ -136,7 +135,7 @@ const TweetPage = () => {
             
             <p className="mt-2 fs-4">{post.content}</p>
             <p className='fs-6 text-muted'>
-             {dayjs(post.createdAt).format('A HH:mm · YYYY년 MM월 DD일')}
+             {dayjs(post.createdAt).add(9, 'hour').format('A HH:mm · YYYY년 MM월 DD일')}
             </p>
             <p>
                 리트윗 {post?.retweetScore} 좋아요 {post?.likeScore}
@@ -228,7 +227,7 @@ const TweetPage = () => {
                     </div>
                     <p className="mt-2 fs-5">{reply.content}</p>
                     <p className='fs-6 text-muted'>
-                        {dayjs(reply!.createdAt).format('A HH:mm · YYYY년 MM월 DD일')}
+                        {dayjs(reply!.createdAt).add(9, 'hour').format('A HH:mm · YYYY년 MM월 DD일')}
                     </p>
                     <p>
                         리트윗 {reply.retweetScore} 좋아요 {reply.likeScore}

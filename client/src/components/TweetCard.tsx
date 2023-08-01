@@ -112,7 +112,7 @@ const TweetCard = ({
                           e.stopPropagation()}>
                           {content}</p>
                     <p className='fs-6 text-muted'>
-                    {dayjs(createdAt).format('A HH:mm · YYYY년 MM월 DD일')}
+                    {dayjs(createdAt).add(9, 'hour').format('A HH:mm · YYYY년 MM월 DD일')}
                     </p>
                     <p>
                         리트윗 {retweetScore} 좋아요 {likeScore}

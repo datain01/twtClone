@@ -23,6 +23,7 @@
     "cls": "0.1.5",
     "dayjs": "1.11.9",
     "dayjs-ext": "2.2.0",
+    "dayjs-plugin-utc": "0.1.2",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
     "next": "13.4.10",
@@ -31,6 +32,8 @@
     "react-bootstrap-icons": "1.10.3",
     "react-dom": "18.2.0",
     "swr": "2.2.0",
-    "typescript": "5.1.6"
+    "timezone": "1.0.23",
+    "typescript": "5.1.6",
+    "utc": "0.1.0"
   }
 }
