@@ -34,6 +34,9 @@ const TweetCard = ({
   const router = useRouter();
   const {authenticated} = useAuthState();
 
+  const {user: currentUser} = useAuthState();
+  const currentUserProfileUrl = currentUser?.profileUrl || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+
   const [showReply, setShowReply] = useState(false); //답글 버튼 눌렀을때 답멘창 보여주기 여부
     const [newReply, setNewReply] = useState(""); //답멘 제출용
 
@@ -154,11 +157,11 @@ const TweetCard = ({
                     </div>
                     </>
                     
-                    
+                    {/* 답글란 */}
                     {showReply && (<>
                             <form onSubmit={submitReply}>
                                 <div className='mt-4  position-relative d-flex'>
-                                <Image src={user?.profileUrl || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} alt="user" width="40" height="40" className='rounded-circle'/>
+                                <Image src={currentUserProfileUrl} alt="user" width="40" height="40" className='rounded-circle'/>
                                     <textarea className="form-control ms-2"
                                         id="exampleFormControlTextarea1"
                                         style={{
@@ -169,6 +172,8 @@ const TweetCard = ({
                                         placeholder ="무슨 일이 일어나고 있나요?"
                                         value={newReply}
                                         onChange={(e)=>setNewReply(e.target.value)}
+                                        onClick={(e) => e.stopPropagation()}
+                                        
                                     />
                                     
                                 </div>

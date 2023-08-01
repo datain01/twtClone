@@ -81,9 +81,7 @@ export default class Tweet extends BaseEntity {
     }
 
     // 트윗의 알티
-    @OneToMany(() => Retweet, (retweet) => retweet.tweet, {
-        cascade: true
-    })
+    @OneToMany(() => Retweet, (retweet) => retweet.tweet)
     retweets: Retweet[];
 
     // 알티 스코어

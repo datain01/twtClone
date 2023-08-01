@@ -119,9 +119,11 @@ const TweetPage = () => {
                         <p className="mb-0 text-muted">@{post.user.username}</p>
                     </div>
                 </Link>
-                <span className='position-absolute end-0 mt-2'>
+
+                {/* 삭제버튼 */}
+                <span className='position-absolute end-0 mt-2'>                
                 <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    <Dropdown.Toggle variant="transparent" id="dropdown-basic" style={{ backgroundColor: 'transparent', borderColor: 'transparent' }}>
                     <ThreeDots width="24" height="24" fill="grey" />
                     </Dropdown.Toggle>
 
@@ -214,7 +216,7 @@ const TweetPage = () => {
 
                     <div className="d-flex">
                     <Link href={`/user/${reply.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
-                        <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" 
+                        <Image src = {reply.user?.profileUrl}
                         alt="user" width="40" height="40" className='rounded-circle'/>
                         </Link>
                         <Link href={`/user/${reply.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
