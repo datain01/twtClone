@@ -20,7 +20,9 @@ export default class Retweet extends BaseEntity {
     @Column({nullable: true})
     tweetId: number;
 
-    @ManyToOne(()=>Tweet, (tweet)=>tweet.retweets)
+    @ManyToOne(()=>Tweet, (tweet)=>tweet.retweets, {
+        onDelete: "CASCADE"
+    })
     tweet: Tweet;
 
     @Column({nullable: true})

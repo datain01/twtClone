@@ -103,6 +103,7 @@ const TweetCard = ({
                         <p className="mb-0 text-muted">@{user?.username}</p>
                     </div>
                     </Link>
+                    
                     </div>
                     <p className="mt-2 fs-5" onClick={(e) => 
                           e.stopPropagation()}>
@@ -115,7 +116,7 @@ const TweetCard = ({
                     </p>
                     <div className="d-flex justify-content-between">
                     {/* 답글 버튼 */}
-                    <button type="button" className="btn btn-link text-muted" 
+                    <button type="button" className="btn text-muted" 
                         onClick={(e)=>{
                           e.stopPropagation();
                           if (authenticated) {
@@ -124,10 +125,10 @@ const TweetCard = ({
                             router.push("/login")
                         }                   
                             }}>
-                        <Chat width="20" height="20" fill="grey" />
+                        <Chat width="20" height="20" fill="grey" /> {replyCount}
                     </button>
                     {/* 리트윗 */}
-                    <button type="button" className="btn btn-link text-muted"
+                    <button type="button" className="btn text-muted"
                     onClick={(e) => {
                       e.stopPropagation();
                       retweet(1);
@@ -135,7 +136,7 @@ const TweetCard = ({
                         <ArrowRepeat width="20" height="20" fill={userRetweet ? "#38B2AC" : "grey"} />
                     </button>
                     {/* 좋아요 */}
-                    <button type="button" className="btn btn-link text-muted"
+                    <button type="button" className="btn text-muted"
                         onClick={(e) => {
                           e.stopPropagation();
                           like(1);
@@ -147,18 +148,17 @@ const TweetCard = ({
                         )}
                         
                     </button>
-                    <button type="button" className="btn btn-link text-muted">
+                    <button type="button" className="btn text-muted">
                         <Bookmark width="20" height="20" fill="grey" />
                     </button>
                     </div>
                     </>
-
+                    
+                    
                     {showReply && (<>
                             <form onSubmit={submitReply}>
                                 <div className='mt-4  position-relative d-flex'>
-                                    <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" 
-                                    alt="user" width="40" height="40" 
-                                    className='rounded-circle'/>
+                                <Image src={user?.profileUrl || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} alt="user" width="40" height="40" className='rounded-circle'/>
                                     <textarea className="form-control ms-2"
                                         id="exampleFormControlTextarea1"
                                         style={{

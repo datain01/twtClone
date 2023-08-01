@@ -20,7 +20,9 @@ export default class Like extends BaseEntity {
     @Column({nullable: true})
     tweetId: number;
 
-    @ManyToOne(()=>Tweet, (tweet)=>tweet.likes)
+    @ManyToOne(()=>Tweet, (tweet)=>tweet.likes, {
+        onDelete: "CASCADE"
+    })
     tweet: Tweet;
 
     @Column({nullable: true})

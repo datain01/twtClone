@@ -32,7 +32,7 @@ export default class Reply extends BaseEntity {
     @Column()
     tweetId: number;
 
-    @ManyToOne(() => Tweet, (tweet) => tweet.replies, { nullable: false })
+    @ManyToOne(() => Tweet, (tweet) => tweet.replies, { nullable: false,  onDelete: "CASCADE" })
     tweet: Tweet;
 
     

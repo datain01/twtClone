@@ -3,12 +3,13 @@ import { useRouter } from 'next/router'
 import React, { FormEvent, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import Image from 'next/image'
-import { ArrowRepeat, Bookmark, Chat, Heart, HeartFill } from 'react-bootstrap-icons';
+import { ArrowRepeat, Bookmark, Chat, Heart, HeartFill, ThreeDots } from 'react-bootstrap-icons';
 import { useAuthState } from '@/context/auth';
 import dayjs from 'dayjs';
 import 'dayjs-ext/locale/ko'
 import axios from 'axios';
 import Link from 'next/link';
+import  Dropdown  from 'react-bootstrap/Dropdown';
 
 
 const TweetPage = () => {
@@ -89,6 +90,17 @@ const TweetPage = () => {
             console.log(error);
         }
     }
+
+    const deleteTweet = async () => {
+        try {
+            // 서버에 삭제 요청 보내기
+            await axios.delete(`/posts/${identifier}/${slug}`);
+            // 삭제되면 메인 타임라인으로
+            router.push("/");        
+        } catch (error) {
+            console.log("트윗 삭제 중 오류", error);
+        }
+    }
     
     dayjs.locale('ko');
   return (
@@ -97,19 +109,29 @@ const TweetPage = () => {
             {/* 본 트윗 시작*/}
             {post && post.user &&(
                 <>
-            <div className="d-flex">
-            <Link href={`/user/${post.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
-        
-                
-            <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="user" width="45" height="45" className='rounded-circle'/>
-            </Link>
-            <Link href={`/user/${post.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
-            <div className='ms-3'>
-                <strong style={{color:"black"}}>{post.user.nickname}</strong>
-                <p className="mb-0 text-muted">@{post.user.username}</p>
+            <div className="d-flex position-relative">
+                <Link href={`/user/${post.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
+                <Image src={post.user?.profileUrl || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} alt="user" width="50" height="50" className='rounded-circle'/>
+                </Link>
+                <Link href={`/user/${post.user?.username}`} className='text-decoration-none' onClick={(e)=>{e.stopPropagation()}}>
+                    <div className='ms-3'>
+                        <strong style={{color:"black"}}>{post.user.nickname}</strong>
+                        <p className="mb-0 text-muted">@{post.user.username}</p>
+                    </div>
+                </Link>
+                <span className='position-absolute end-0 mt-2'>
+                <Dropdown>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    <ThreeDots width="24" height="24" fill="grey" />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                    <Dropdown.Item onClick = { deleteTweet }>삭제하기</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+                </span>
             </div>
-            </Link>
-            </div>
+            
             <p className="mt-2 fs-4">{post.content}</p>
             <p className='fs-6 text-muted'>
              {dayjs(post.createdAt).format('A HH:mm · YYYY년 MM월 DD일')}
@@ -154,9 +176,7 @@ const TweetPage = () => {
                 <>
                     <form onSubmit={submitReply}>
                         <div className='mt-4  position-relative d-flex'>
-                            <Image src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" 
-                            alt="user" width="40" height="40" 
-                            className='rounded-circle'/>
+                            <Image src={user?.profileUrl || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} alt="user" width="45" height="45" className='rounded-circle'/>
                             <textarea className="form-control ms-2"
                                 id="exampleFormControlTextarea1"
                                 style={{

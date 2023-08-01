@@ -132,11 +132,32 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
     } catch (error) {
         console.log (error, "포스트 생성중 오류가 발생했습니다.")
         return res.status(500).json ({error: "포스트 생성중 오류가 발생했습니다."});
-    }
-    
-    
+    } 
 }
 
+// 트윗 삭제하기
+const deleteTweet = async (req:Request, res:Response) => {
+    const {identifier, slug} = req.params;
+    const user: User = res.locals.user;
+
+    try {
+        const post = await Tweet.findOneByOrFail({identifier, slug});
+
+        // 자신의 트윗인지 확인
+        if (post.username !== user.username) {
+            return res.status(403).json({error: "자신의 트윗만 삭제할 수 있습니다."})
+        }
+
+        await post.remove();
+        console.log("트윗 삭제 완료")
+        return res.json({message:"트윗이 삭제됐습니다."});
+       
+
+    } catch (error) {
+        return res.status(404).json ({error: "트윗을 찾을 수 없습니다."})
+    }
+    
+}
 
 const router = Router();
 
@@ -144,6 +165,7 @@ router.get("/:identifier/:slug/replies", userMiddleware, getPostReplies);
 
 router.get("/:identifier/:slug", userMiddleware, getPost);
 router.post("/", userMiddleware, authMiddleware, createPost);
+router.delete("/:identifier/:slug", userMiddleware, authMiddleware, deleteTweet);
 
 // 답글 api
 router.post("/:identifier/:slug/replies", userMiddleware, createPostReply);

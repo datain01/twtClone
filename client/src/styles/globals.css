@@ -138,3 +138,7 @@ div::-webkit-scrollbar-thumb {
   width: 6rem; 
   height: 2.5rem;
 }
+
+.no-deco {
+  text-decoration: none !important; 
+}
