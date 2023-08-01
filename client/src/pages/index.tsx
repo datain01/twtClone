@@ -8,17 +8,21 @@ import { Tweet } from '@/types'
 import useSWRInfinite from 'swr/infinite'
 import useSWR from 'swr'
 import TweetCard from '@/components/TweetCard'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Home: NextPage = () => {
-  const {authenticated} = useAuthState();
+
+  //ref가 펜이라면 useRef는 메모종이. scrollContainer는 ref를 이용해서 주소를 메모에 기록해둔거임...
+  const scrollContainer = useRef(null); //특정 스크롤 컨테이너의 주소를 기록하고 그 컨테이너의 DOM 요소에 접근할 수 있음
+  const observedElementRef = useRef(null); //특정 엘리먼트의 주소를 기록. 여기서는 tweetCard가 그 엘리먼트
 
   const getKey = (pageIndex:number, previousPageData: Tweet[]) => { 
     if (previousPageData && !previousPageData.length) return null;
     return `/posts?page=${pageIndex}`;
   }
+
 
   const {
     data, //각 페이지의 가져오기 응답 값의 배열
@@ -51,13 +55,14 @@ const Home: NextPage = () => {
     // tweets 배열에 tweet이 추가돼서 마지막 tweet이 바뀌면, 바뀐 tweet중 마지막을 observedPost로 대체
     if (id !== observedTweet) {
       setObservedTweet(id);
-      observeElement(document.getElementById(id));
+      observeElement(observedElementRef.current);
     }
 
   }, [tweets]);
 
   const observeElement = (element: HTMLElement | null) => { 
     //HTMLElement: 웹 페이지의 각 요소를 나타내는 객체 (<div>, <span> 등의 태그가 있다면, 각각이 HTMLElement 객체로 표현됨)
+    // console.log('Observing element:', element);
     if (!element) return;
 
     //IntersectionObserver: 자바스크립트 API. 특정 html 요소 (element)가 뷰포트와 교차하는지 감시
@@ -65,24 +70,25 @@ const Home: NextPage = () => {
       (entries) => {
         if (entries[0].isIntersecting === true) { //entries[0].isIntersecting이 속성을 확인, 요소가 뷰포트와 교차하는지 확인함.
           //true가 되면 콘솔에 메시지 출력 후 page 상태를 증가
-          console.log("Reached bottom of post");
+          // console.log("마지막 포스트");
           setPage(page + 1);
           observer.unobserve(element); //요소에 대한 관찰 중지
         }
       },
-      {threshold: 1} //두번째 매개변수: 옵션 객체. threshold는 교차영역 비율을 뜻함 (0.0~1.0).
+      {root: scrollContainer.current, threshold: 0.5} //두번째 매개변수: 옵션 객체. threshold는 교차영역 비율을 뜻함 (0.0~1.0).
       // 1은 요소의 전체 영역이 뷰포트와 교차했을때 콜백함수를 호출하도록함
     );
       observer.observe(element) //를 호출하여 요소에 대한 관찰 시작
   }
 
   return (
-    <div style={{height:"100vh", overflow:"auto"}}>
+    <div ref={scrollContainer} style={{height:"100vh", overflow:"auto"}}>
       {isInitialLoading && <p className='text-lg text-center'>Loading...</p>}
-      {tweets?.map((tweet)=>(
+      {tweets?.map((tweet, index)=>(
         <TweetCard
         tweet={tweet}
         key={tweet.identifier}
+        innerRef={index === tweets.length - 1 ? observedElementRef:null}
         mutate={mutate}
         />
       ))}

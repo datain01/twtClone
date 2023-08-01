@@ -5,16 +5,17 @@ import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useState, Ref } from 'react'
 import { ArrowRepeat, Bookmark, Chat, Heart, HeartFill } from 'react-bootstrap-icons'
 
 
 interface TweetCardProps {
-    tweet: Tweet
-    mutate?: ()=>void //mutate는 index.tsx에서 넘겨주는거임...
+  tweet: Tweet;
+  mutate?: () => void;
+  innerRef?: React.Ref<HTMLDivElement>; // innerRef라는 이름으로 Ref를 추가
 }
 
-const TweetCard = ({
+const TweetCard: React.FC<TweetCardProps> = ({
   tweet: {
     identifier,
     slug,
@@ -27,10 +28,11 @@ const TweetCard = ({
     likeScore,
     userRetweet,
     retweetScore,
-    replyCount
+    replyCount,
   },
-  mutate
-}: TweetCardProps) => {
+  mutate,
+  innerRef, 
+}) => {
   const router = useRouter();
   const {authenticated} = useAuthState();
 
@@ -85,7 +87,7 @@ const TweetCard = ({
 
 
   return (
-        <div className='card' onClick={() => router.push(`/${identifier}/${slug}`)} >
+        <div className='card' onClick={() => router.push(`/${identifier}/${slug}`)} ref={innerRef}>
           <div className='card-body'>
               <div className="mt-3 ms-4"> 
                     {/* 본 트윗 시작*/}
