@@ -8,6 +8,36 @@ import multer, { FileFilterCallback } from "multer";
 import { makeId } from "../utils/helpers";
 import path from "path";
 import { unlinkSync } from "fs";
+import Like from "../entities/Like";
+
+const getLikedTweets = async (req: Request, res: Response) => {
+    const {username} = req.params;
+    const user = res.locals.user;
+
+    try {
+        const user = await User.findOneByOrFail({username});
+        // 위에서 찾은 사용자의 좋아요 표시를 찾고 관련 트윗들을 찾기
+        const likedTweets = await Like.find({
+            where: {username},
+            order: {createdAt: "DESC"},
+            relations: ["tweet", "tweet.user", "tweet.replies", "tweet.likes", "tweet.retweets"]
+        });
+
+        // 좋아요, 리트윗 남긴 것들 표시하기
+        likedTweets.forEach((l) => {
+            l.tweet.setUserLike(user);
+            l.tweet.setUserRetweet(user);
+        })
+
+        // 좋아요 객체에서 트윗들을 추출하기
+        const tweets = likedTweets.map((l) => l.tweet);
+        return res.json(tweets);
+    } catch (error) {
+        console.log("좋아요 가져오기 오류", error);
+        return res.status(500).json({error: "문제가 발생했습니다."})
+    }
+
+}
 
 // 이미지 파일을 저장해두는 함수
 const upload = multer ({
@@ -103,6 +133,7 @@ const getUserData = async (req: Request, res: Response) => {
         //해당 유저가 쓴 포스트 정보 가져오기
         const tweets = await Tweet.find({
             where: {username: user.username},
+            order: {createdAt: "DESC"},
             relations: ["replies", "likes", "retweets", "user"],
         })
 
@@ -162,5 +193,6 @@ router.post(
     ownProfile,
     upload.single("file"), 
     uploadProfileImage);
+router.get("/:username/likes", userMiddleware, getLikedTweets);
 
 export default router;
