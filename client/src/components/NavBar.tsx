@@ -43,7 +43,7 @@ const NavBar: React.FC = () => {
             </li>
 
             <li className='nav-item'>
-                <Link href="#" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Search" data-bs-original-title="Search">
+                <Link href="/search" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Search" data-bs-original-title="Search">
                     <Search width="24" height="24" fill="black" />
                 </Link>            
             </li>

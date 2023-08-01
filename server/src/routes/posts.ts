@@ -5,6 +5,44 @@ import { isEmpty } from "class-validator";
 import User from "../entities/User";
 import Tweet from "../entities/Tweet";
 import Reply from "../entities/Reply";
+import { Like } from "typeorm";
+
+// 트윗 검색하기
+const searchTweets = async (req:Request, res:Response) => {
+    try {
+        const useSearch = req.query.term as string;
+        let tweets: Tweet[];
+
+        if (useSearch.startsWith('@')) {
+            const username = useSearch.slice(1); //@를 생략하고 검색
+            const user = await User.findOne ({where:{username}})
+            if (user) {
+                tweets = await Tweet.find ({
+                    where: {username},
+                    relations: ["user", "likes", "retweets", "replies"]
+                })
+            } else {
+                tweets = []; //사용자를 못찾으면 빈배열
+            }
+        } else {
+            // 일반 검색일 경우
+            tweets = tweets = await Tweet.find({
+                    where: {content: Like(`%${useSearch}%`)},
+                    relations: ["user", "likes", "retweets", "replies"],
+                });
+        }
+
+    if (res.locals.user) {
+        tweets.forEach((p)=>p.setUserLike(res.locals.user));
+        tweets.forEach((p)=>p.setUserRetweet(res.locals.user));
+    }
+
+    res.json({results: tweets});
+    } catch (error) {
+        console.log(error, "검색중 서버 오류")
+        res.status(500).json({error: "검색 중 서버에 오류 발생"})
+    }    
+}
 
 //메인 홈에 트윗들 띄우기
 const getTweets = async (req: Request, res: Response) => {
@@ -171,5 +209,6 @@ router.delete("/:identifier/:slug", userMiddleware, authMiddleware, deleteTweet)
 router.post("/:identifier/:slug/replies", userMiddleware, createPostReply);
 
 router.get("/", userMiddleware, getTweets);
+router.get("/search", userMiddleware, searchTweets);
 
 export default router;
