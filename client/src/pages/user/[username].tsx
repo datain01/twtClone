@@ -13,8 +13,8 @@ const UserPage = () => {
     const username = router.query.username;
     
     // username이 있으면 /users/{username}에서 데이터를 가져오고, 없으면 null 반환
-    const { data: userData, error: userError } = useSWR<any>(username ? `/users/${username}` : null);
-    const { data: likesData, error: likesError } = useSWR<any>(username ? `/users/${username}/likes` : null);
+    const { data: userData, error: userError, mutate:mutateUser } = useSWR<any>(username ? `/users/${username}` : null);
+    const { data: likesData, error: likesError, mutate:mutateLike } = useSWR<any>(username ? `/users/${username}/likes` : null);
 
     // Tweets, Likes 탭 이동용
     const [activeTab, setActiveTab] = useState('tweets');
@@ -116,14 +116,14 @@ const UserPage = () => {
         {userData.userData.map((userData:any) => {
           if (userData.type === "Tweet") {
             const tweet:Tweet = userData;
-            return <TweetCard key={tweet.identifier} tweet={tweet}/>
+            return <TweetCard key={tweet.identifier} tweet={tweet} mutate={mutateUser}/>
           }
         })}
       </div>
       <div className={`tab-pane fade show ${activeTab === 'likes' ? 'active' : ''}`} id="likes">
         {/* 자신의 좋아요 모음 */}
         {likesData?.map((tweet: Tweet) => {
-          return <TweetCard key={tweet.identifier} tweet={tweet}/>
+          return <TweetCard key={tweet.identifier} tweet={tweet} mutate={mutateLike}/>
         })}
       </div>
     </div>

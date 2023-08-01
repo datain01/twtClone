@@ -12,7 +12,6 @@ import Like from "../entities/Like";
 
 const getLikedTweets = async (req: Request, res: Response) => {
     const {username} = req.params;
-    const user = res.locals.user;
 
     try {
         const user = await User.findOneByOrFail({username});
