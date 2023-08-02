@@ -5,6 +5,7 @@ import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { FormEvent, useState } from 'react'
+import { mutate } from 'swr';
 
 const PostTweet = () => {
     const router = useRouter();
@@ -20,6 +21,8 @@ const PostTweet = () => {
             const {data: post} = await axios.post<Tweet>("/posts", {
                 content
             })
+
+            mutate(`/posts?page=0`); // Add this line to invalidate the cache
 
             router.push ("/"); //트윗을 올리면 메인페이지로 리다이렉트
             // router.push (`/${post.identifier}/${post.slug}`);

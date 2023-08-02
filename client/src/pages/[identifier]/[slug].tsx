@@ -1,7 +1,7 @@
 import { Reply, Tweet } from '@/types';
 import { useRouter } from 'next/router'
 import React, { FormEvent, useEffect, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import Image from 'next/image'
 import { ArrowRepeat, Bookmark, Chat, Heart, HeartFill, ThreeDots } from 'react-bootstrap-icons';
 import { useAuthState } from '@/context/auth';

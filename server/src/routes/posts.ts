@@ -64,7 +64,7 @@ const getTweets = async (req: Request, res: Response) => {
             tweets.forEach((p)=>p.setUserBookmark(res.locals.user));
             
         }
-        
+
         return res.json(tweets);
     } catch (error) {
         console.log(error);
@@ -170,6 +170,7 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
         post.content = content;
         post.user = user;
 
+        post.updatedAt = new Date();
         await post.save();
         return res.json({post, user}); //클라로 응답
     } catch (error) {
