@@ -18,15 +18,11 @@ const getLikedTweets = async (req: Request, res: Response) => {
         const user = await User.findOneByOrFail({username});
         // 위에서 찾은 사용자의 좋아요 표시를 찾고 관련 트윗들을 찾기
 
-        console.log(user);
-
         const likedTweets = await Like.find({
             where: {username},
             order: {createdAt: "DESC"},
             relations: ["tweet", "tweet.user", "tweet.replies", "tweet.likes", "tweet.retweets"]
         });
-
-        console.log(likedTweets);
 
         const noReplyLikes = likedTweets.filter(l => l.tweet !== null);
 

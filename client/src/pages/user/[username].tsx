@@ -85,6 +85,14 @@ const UserPage = () => {
       }
     }
 
+    // 간혹 자신의 프로필인데도 수정 버튼이 안보이거나, 자신의 프로필이 아닌데도 수정 버튼이 보일때도 있어서
+    // 딜레이 문제를 해결하기 위해 ownProfile 상태가 변경될때 컴포넌트를 다시 렌더링하도록 useEffect를 사용함
+    useEffect(() => { 
+      if (!userData) return;
+      setOwnProfile(authenticated && user?.username === username);
+      setNickname(userData.user.nickname || ''); // 닉네임 상태 업데이트
+      setIntroduce(userData.user.introduce || ''); // 자기소개 상태 업데이트
+    }, [username, userData]); // username 또는 userData가 변경될 때만 실행
 
       
     //데이터가 아직 안들어왔으면 로딩 띄우기
@@ -119,11 +127,31 @@ const UserPage = () => {
           
           <div className="card-body">
           
-            {/* <h5 className="card-title">{userData.user.nickname}</h5> */}
-            <input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)}/>
+            <div className="input-group">
+              <input type="text" value={nickname} 
+              className="form-control" 
+              placeholder="닉네임 변경" 
+              aria-label="Nickname" 
+              aria-describedby="basic-addon1" 
+              onChange={(e) => setNickname(e.target.value)}
+              />
+            </div>
+
             <p className="card-subtitle text-muted">@{userData.user.username}</p>
-            {/* <p className='card-text mt-3'>자기소개 {userData.user.introduce}</p> */}
-            <input type="text" value={introduce} onChange={(e) => setIntroduce(e.target.value)}/>
+            <div className="input-group">
+              <textarea value={introduce} 
+                className="form-control" 
+                placeholder="자기소개 변경" 
+                aria-label="Introduce" 
+                aria-describedby="basic-addon1" 
+                onChange={(e) => setIntroduce(e.target.value)}
+                style={{
+                  width: "100%",
+                  height: "80px",
+                  resize: "none"
+              }}
+              />
+            </div>
             <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
           </div>
         </>
