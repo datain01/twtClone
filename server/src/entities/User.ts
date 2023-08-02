@@ -37,11 +37,12 @@ export default class User extends BaseEntity {
 
 // 닉네임
     @Column()
-    @Length(1, 50, {message:"닉네임은 비울 수 없습니다."})
+    @Length(1, 10, {message:"닉네임은 1~10 자이어야 합니다.", groups: ["profileUpdate"]})
     nickname:string;
 
 // 자기소개
     @Column({ nullable: true })
+    @Length(0, 50, {message:"자기소개는 50자가 최대입니다.", groups: ["profileUpdate"]})
     introduce:string;
 
 // 트윗

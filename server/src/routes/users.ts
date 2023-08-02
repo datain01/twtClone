@@ -10,6 +10,50 @@ import path from "path";
 import { unlinkSync } from "fs";
 import Like from "../entities/Like";
 import Retweet from "../entities/Retweet";
+import { validate } from "class-validator";
+
+// auth.ts에서 사용했던걸 그대로 가져옴
+const mapError = (errors: Object[]) => {
+    return errors.reduce((prev: any, err: any) => {
+      prev[err.property] = Object.entries(err.constraints)[0][1];
+      return prev;
+    }, {});
+  };
+
+const updateProfile = async (req: Request, res: Response) => {
+    const {username} = req.params;
+    const {nickname, introduce} = req.body;
+
+    try {
+        const user = await User.findOneOrFail({
+            where: {username}
+        })
+
+        // 접속한 사용자의 프로필인지 확인
+        if (res.locals.user.username !== user.username) {
+            return res.status(403).json({error: "자신의 프로필만 수정할 수 있습니다."})
+        }
+
+        if (nickname) user.nickname = nickname;
+        if (introduce) user.introduce = introduce;
+    
+
+        //엔티티에 설정한 validate 조건으로 유효성 검사. 제출한 nickname과 introduce 필드만 검사를 하도록 함
+        const errors = await validate(user, {
+            groups: ['profileUpdate']
+        });
+        if (errors.length > 0) {
+            return res.status(400).json(mapError(errors));
+        }
+
+        await user.save();
+        return res.json(user);
+    } catch (error) {
+        console.log(error, "프로필 업데이트 서버 오류")
+        return (res.status(500).json({error: "프로필 업데이트 문제가 발생했습니다."}))
+        
+    }
+}
 
 const getLikedTweets = async (req: Request, res: Response) => {
     const {username} = req.params;
@@ -130,7 +174,7 @@ const getUserData = async (req: Request, res: Response) => {
         //유저 정보 가져오기
         const user = await User.findOneOrFail({
             where: { username: req.params.username },
-            select: ["username", "createdAt", "nickname", "profileUrn"]
+            select: ["username", "createdAt", "nickname", "introduce", "profileUrn"]
         })
 
         //해당 유저가 쓴 트윗 정보 가져오기
@@ -210,5 +254,6 @@ router.post(
     upload.single("file"), 
     uploadProfileImage);
 router.get("/:username/likes", userMiddleware, getLikedTweets);
+router.patch("/:username/profile", userMiddleware, authMiddleware, updateProfile);
 
 export default router;

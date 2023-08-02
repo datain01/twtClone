@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import axios from 'axios';
+import { BorderOuter } from 'react-bootstrap-icons';
 
 const UserPage = () => {
     const router = useRouter();
@@ -23,6 +24,8 @@ const UserPage = () => {
     const [editMode, setEditMode] = useState(false);
     const [nickname, setNickname] = useState(userData?.nickname || '');
     const [introduce, setIntroduce] = useState(userData?.introduce || '')
+    const [nicknameError, setNicknameError] = useState('');
+    const [introduceError, setIntroduceError] = useState('');
 
     // ==========사진 올리기용 시작!!==========
     const [ownProfile, setOwnProfile] = useState(false);
@@ -75,13 +78,18 @@ const UserPage = () => {
 
     const handleSave = async () => {
       try {
-        await axios.patch(`/users/${username}/update`, {nickname, introduce});
-        // 수정 모드 종료
-        setEditMode(false);
-
+        // 기존 리소스의 일부를 변경하려 하는 거기때문에 patch 메서드 사용
+        const res = await axios.patch(`/users/${username}/profile`, {nickname, introduce});
+      
+         // 수정 모드 종료
+         setEditMode(false);
         mutateUser();
-      } catch (error) {
-        console.log(error, "수정 제출 오류")
+      } catch (error:any) {
+        console.log(error.response.data, "수정 제출 오류")
+        if (error.response.status === 400){
+        setNicknameError(error.response.data.nickname);
+          setIntroduceError(error.response.data.introduce);
+        }
       }
     }
 
@@ -103,7 +111,7 @@ const UserPage = () => {
       
       <div style={{height:"100vh", overflow:"auto"}}>
         <input type="file" hidden={true} ref={fileInputRef} onChange={uploadImage}/>
-        <div className="card position-relative">
+        <div className="card position-relative mx-2" style = {{border:"none"}}>
         {/* 프로필 사진 */}
         {userData.user.profileUrl && (
           <Image
@@ -135,7 +143,9 @@ const UserPage = () => {
               aria-describedby="basic-addon1" 
               onChange={(e) => setNickname(e.target.value)}
               />
+               
             </div>
+            {nicknameError && <div className="text-danger">{nicknameError}</div>}
 
             <p className="card-subtitle text-muted">@{userData.user.username}</p>
             <div className="input-group">
@@ -151,6 +161,7 @@ const UserPage = () => {
                   resize: "none"
               }}
               />
+               {introduceError && <div className="text-danger">{introduceError}</div>}
             </div>
             <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
           </div>
@@ -167,7 +178,7 @@ const UserPage = () => {
             
               <h5 className="card-title">{userData.user.nickname}</h5>
               <p className="card-subtitle text-muted">@{userData.user.username}</p>
-              <p className='card-text mt-3'>자기소개 {userData.user.introduce}</p>
+              <p className='card-text mt-3'> {userData.user.introduce}</p>
               <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
             </div>
           </>
@@ -177,7 +188,7 @@ const UserPage = () => {
       </div>
       
 
-      <ul className="nav nav-tabs">
+      <ul className="nav nav-tabs nav-fill nav-pills">
       <li className="nav-item">
         <a
           className={`nav-link ${activeTab === 'tweets' ? 'active' : ''}`}
