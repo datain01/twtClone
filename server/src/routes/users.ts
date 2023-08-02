@@ -65,7 +65,7 @@ const getLikedTweets = async (req: Request, res: Response) => {
         const likedTweets = await Like.find({
             where: {username},
             order: {createdAt: "DESC"},
-            relations: ["tweet", "tweet.user", "tweet.replies", "tweet.likes", "tweet.retweets"]
+            relations: ["tweet", "tweet.user", "tweet.replies", "tweet.likes", "tweet.retweets", "tweet.bookmarks"]
         });
 
         const noReplyLikes = likedTweets.filter(l => l.tweet !== null);
@@ -74,6 +74,7 @@ const getLikedTweets = async (req: Request, res: Response) => {
         noReplyLikes.forEach((l) => {
             l.tweet.setUserLike(user);
             l.tweet.setUserRetweet(user);
+            l.tweet.setUserBookmark(user);
         })
 
         // 좋아요 객체에서 트윗들을 추출하기
@@ -180,13 +181,13 @@ const getUserData = async (req: Request, res: Response) => {
         //해당 유저가 쓴 트윗 정보 가져오기
         const tweets = await Tweet.find({
             where: {username: user.username},
-            relations: ["replies", "likes", "retweets", "user"],
+            relations: ["replies", "likes", "retweets", "user", "bookmarks"],
         })
 
         // 해당 유저가 리트윗한 트윗 정보 가져오기
         const retweets = await Retweet.find({
             where: {username: user.username},
-            relations: ["tweet", "tweet.user", "tweet.replies", "tweet.retweets", "tweet.likes"]            
+            relations: ["tweet", "tweet.user", "tweet.replies", "tweet.retweets", "tweet.likes", "tweet.bookmarks"]            
         })
         //Tweet 객체에서 직접 가져온 tweets와 달리 리트윗 정보를 담은 Retweet 객체의 배열에서 가져온거라 Retweet 객체의 tweet 속성에서 추출하려면
         //위의 코드로 변환 작업이 필요함
@@ -208,6 +209,7 @@ const getUserData = async (req: Request, res: Response) => {
             const {user} = res.locals;
             allTweets.forEach ((t) => t.setUserLike(user));
             allTweets.forEach ((t) => t.setUserRetweet(user));
+            allTweets.forEach ((t) => t.setUserBookmark(user));
             // replies.forEach ((t) => t.setUserLike(user));
             // replies.forEach ((t) => t.setUserRetweet(user));
         }

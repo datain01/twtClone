@@ -9,6 +9,7 @@ import Retweet from "./Retweet";
 import Reply from "./Reply";
 import Like from "./Like";
 import { Expose } from "class-transformer";
+import Bookmark from "./Bookmark";
 
 //유저 정보 엔티티
 @Entity("users")
@@ -74,6 +75,10 @@ export default class User extends BaseEntity {
 // 답글
     @OneToMany(()=>Reply, (reply) => reply.tweet)
     replies: Reply[];
+
+// 북마크
+    @OneToMany(()=>Bookmark, (bookmark) => bookmark.tweet)
+    bookmarks: Bookmark[];
     
 //프로필 사진
     @Column({ nullable: true })

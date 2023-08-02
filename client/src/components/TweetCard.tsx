@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { FormEvent, useState, Ref } from 'react'
-import { ArrowRepeat, Bookmark, Chat, Heart, HeartFill } from 'react-bootstrap-icons'
+import { ArrowRepeat, Bookmark, BookmarkFill, Chat, Heart, HeartFill } from 'react-bootstrap-icons'
 
 
 interface TweetCardProps {
@@ -29,6 +29,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
     userRetweet,
     retweetScore,
     replyCount,
+    userBookmark
   },
   mutate,
   innerRef, 
@@ -80,6 +81,17 @@ const TweetCard: React.FC<TweetCardProps> = ({
       await axios.post("/retweets", {identifier, slug, value});
       if (mutate) mutate();
 
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const bookmark = async (value: number) => {
+    if (!authenticated) router.push("/login");
+    if (value === userBookmark) value = 0;
+    try {
+      await axios.post("/bookmarks", {identifier, slug, value});
+      if (mutate) mutate();
     } catch (error) {
       console.log(error);
     }
@@ -153,8 +165,16 @@ const TweetCard: React.FC<TweetCardProps> = ({
                         )}
                         
                     </button>
-                    <button type="button" className="btn text-muted">
-                        <Bookmark width="20" height="20" fill="grey" />
+                    {/* 북마크 */}
+                    <button type="button" className="btn text-muted"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        bookmark(1);
+                      }}>
+                        {userBookmark ? (<BookmarkFill width="20" height="20" fill="skyblue" />
+                        ) : (
+                          <Bookmark width="20" height="20" fill="grey" />
+                        )}
                     </button>
                     </div>
                     </>

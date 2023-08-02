@@ -7,6 +7,7 @@ import Tweet from './Tweet';
 import { Exclude, Expose } from 'class-transformer';
 import Like from './Like';
 import Retweet from './Retweet';
+import Bookmark from './Bookmark';
 
 
 //답글 엔티티
@@ -88,6 +89,17 @@ export default class Reply extends BaseEntity {
         this.identifier = makeId(8);
     }
 
+
+    @Exclude()    
+    @OneToMany (() => Bookmark, (bookmark)=>bookmark.reply)
+    bookmarks: Bookmark[];
+
+    protected userBookmark: number;
+
+    setUserBookmark(user: User) {
+        const index = this.bookmarks?.findIndex(b => b.username === user.username);
+        this.userBookmark = index > -1 ? this.bookmarks[index].value : 0;
+    }
 
 
 }

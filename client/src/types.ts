@@ -26,6 +26,7 @@ export interface Tweet {
     userRetweet?: number;
     retweetScore?: number;
     replyCount?: number;
+    userBookmark?: number;
 }
 
 export interface Reply {
@@ -41,4 +42,5 @@ export interface Reply {
     likeScore: number;
     userRetweet: number;
     retweetScore: number;
+    userBookmark: number;
 }

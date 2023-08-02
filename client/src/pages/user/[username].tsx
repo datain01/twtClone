@@ -110,93 +110,93 @@ const UserPage = () => {
       
       <div style={{height:"100vh", overflow:"auto"}}>
         <input type="file" hidden={true} ref={fileInputRef} onChange={uploadImage}/>
-        <div className="card position-relative mx-2" style = {{border:"none"}}>
-        {/* 프로필 사진 */}
-        {editMode ? (
-          <>
-          {userData.user.profileUrl && 
-          <Image
-          src = {userData.user.profileUrl}
-          alt = "프로필 사진"
-          width={70}
-          height = {70}
-          className='rounded-circle ms-3 mt-3'
-          onClick={() => openFileInput("profile")}
-          />}
-          </>) : (<>
+          <div className="card position-relative mx-2" style = {{border:"none"}}>
+          {/* 프로필 사진 */}
+          {editMode ? (
+            <>
             {userData.user.profileUrl && 
-          <Image
-          src = {userData.user.profileUrl}
-          alt = "프로필 사진"
-          width={70}
-          height = {70}
-          className='rounded-circle ms-3 mt-3'
-          />}        
-          </>)
-        }
+            <Image
+            src = {userData.user.profileUrl}
+            alt = "프로필 사진"
+            width={70}
+            height = {70}
+            className='rounded-circle ms-3 mt-3'
+            onClick={() => openFileInput("profile")}
+            />}
+            </>) : (<>
+              {userData.user.profileUrl && 
+            <Image
+            src = {userData.user.profileUrl}
+            alt = "프로필 사진"
+            width={70}
+            height = {70}
+            className='rounded-circle ms-3 mt-3'
+            />}        
+            </>)
+          }
 
-        {/* 닉네임, 자기소개 수정 */}
-        <> 
-        {editMode? (
-        <>
-          {/* 수정모드on */}
-          <span>
-            <button className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3" onClick={handleSave}>저장</button>
-          </span>
-          
-          <div className="card-body">
-          
-            <div className="input-group">
-              <input type="text" value={nickname} 
-              className="form-control" 
-              placeholder="닉네임 변경" 
-              aria-label="Nickname" 
-              aria-describedby="basic-addon1" 
-              onChange={(e) => setNickname(e.target.value)}
-              />
-               
-            </div>
-            {nicknameError && <div className="text-danger">{nicknameError}</div>}
-
-            <p className="card-subtitle text-muted">@{userData.user.username}</p>
-            <div className="input-group">
-              <textarea value={introduce} 
-                className="form-control" 
-                placeholder="자기소개 변경" 
-                aria-label="Introduce" 
-                aria-describedby="basic-addon1" 
-                onChange={(e) => setIntroduce(e.target.value)}
-                style={{
-                  width: "100%",
-                  height: "80px",
-                  resize: "none"
-              }}
-              />
-               {introduceError && <div className="text-danger">{introduceError}</div>}
-            </div>
-            <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
-          </div>
-        </>
-          ) : (
+          {/* 닉네임, 자기소개 수정 */}
+          <> 
+          {editMode? (
           <>
-          {/* 수정모드 off */}
+            {/* 수정모드on */}
             <span>
-              {/* 자신의 프로필일때만 수정 버튼이 보이도록 */}
-            {ownProfile && <button className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3" onClick={handleEdit}>수정</button>}
+              <button className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3" onClick={handleSave}>저장</button>
             </span>
-          
+            
             <div className="card-body">
             
-              <h5 className="card-title">{userData.user.nickname}</h5>
+              <div className="input-group">
+                <input type="text" value={nickname} 
+                className="form-control" 
+                placeholder="닉네임 변경" 
+                aria-label="Nickname" 
+                aria-describedby="basic-addon1" 
+                onChange={(e) => setNickname(e.target.value)}
+                />
+                
+              </div>
+              {nicknameError && <div className="text-danger">{nicknameError}</div>}
+
               <p className="card-subtitle text-muted">@{userData.user.username}</p>
-              <p className='card-text mt-3'> {userData.user.introduce}</p>
+              <div className="input-group">
+                <textarea value={introduce} 
+                  className="form-control" 
+                  placeholder="자기소개 변경" 
+                  aria-label="Introduce" 
+                  aria-describedby="basic-addon1" 
+                  onChange={(e) => setIntroduce(e.target.value)}
+                  style={{
+                    width: "100%",
+                    height: "80px",
+                    resize: "none"
+                }}
+                />
+                {introduceError && <div className="text-danger">{introduceError}</div>}
+              </div>
               <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
             </div>
           </>
-          )}
-          
-        </>
-      </div>
+            ) : (
+            <>
+            {/* 수정모드 off */}
+              <span>
+                {/* 자신의 프로필일때만 수정 버튼이 보이도록 */}
+              {ownProfile && <button className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3" onClick={handleEdit}>수정</button>}
+              </span>
+            
+              <div className="card-body">
+              
+                <h5 className="card-title">{userData.user.nickname}</h5>
+                <p className="card-subtitle text-muted">@{userData.user.username}</p>
+                <p className='card-text mt-3'> {userData.user.introduce}</p>
+                <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
+              </div>
+            </>
+            )}
+            
+          </>
+        </div>
       
 
       <ul className="nav nav-tabs nav-fill nav-pills">

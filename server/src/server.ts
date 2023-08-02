@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from './routes/auth'
 import postRoutes from './routes/posts'
 import likeRoutes from './routes/likes'
+import bookmarkRoutes from './routes/bookmarks'
 import RetweetRoutes from './routes/retweets'
 import userRoutes from './routes/users'
 
@@ -31,6 +32,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/likes", likeRoutes);
 app.use("/api/retweets", RetweetRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/bookmarks", bookmarkRoutes);
 
 app.use(express.static("public"));
 

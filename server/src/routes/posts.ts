@@ -19,7 +19,7 @@ const searchTweets = async (req:Request, res:Response) => {
             if (user) {
                 tweets = await Tweet.find ({
                     where: {username},
-                    relations: ["user", "likes", "retweets", "replies"]
+                    relations: ["user", "likes", "retweets", "replies", "bookmarks"]
                 })
             } else {
                 tweets = []; //사용자를 못찾으면 빈배열
@@ -28,13 +28,14 @@ const searchTweets = async (req:Request, res:Response) => {
             // 일반 검색일 경우
             tweets = tweets = await Tweet.find({
                     where: {content: Like(`%${useSearch}%`)}, //앞뒤로 %를 포함하면 이 단어를 포함한 걸 모두 검색할 수 있음! %를 안붙이면 정확히 일치하는 것만 검색된다
-                    relations: ["user", "likes", "retweets", "replies"],
+                    relations: ["user", "likes", "retweets", "replies", "bookmarks"],
                 });
         }
 
     if (res.locals.user) {
         tweets.forEach((p)=>p.setUserLike(res.locals.user));
         tweets.forEach((p)=>p.setUserRetweet(res.locals.user));
+        tweets.forEach((p)=>p.setUserBookmark(res.locals.user));
     }
 
     res.json({results: tweets});
@@ -52,7 +53,7 @@ const getTweets = async (req: Request, res: Response) => {
     try {
         const tweets = await Tweet.find ({
             order: {updatedAt: "DESC"},
-            relations: ["user", "likes", "retweets", "replies"],
+            relations: ["user", "likes", "retweets", "replies", "bookmarks"],
             skip: currentPage * perPage,
             take: perPage,
         });
@@ -60,6 +61,8 @@ const getTweets = async (req: Request, res: Response) => {
         if (res.locals.user) {
             tweets.forEach((p)=>p.setUserLike(res.locals.user));
             tweets.forEach((p)=>p.setUserRetweet(res.locals.user));
+            tweets.forEach((p)=>p.setUserBookmark(res.locals.user));
+            
         }
         
         return res.json(tweets);
@@ -78,12 +81,13 @@ const getPostReplies = async (req: Request, res: Response) => {
         const replies = await Reply.find({ //위에서 찾아낸 트윗의 id를 이용해서 해당 트윗에 대한 모든 reply를 db에서 찾음
             where: {tweetId: post.id},
             order: {updatedAt:"DESC"}, //내림차순으로 정렬
-            relations:["user", "likes", "retweets"] //좋아요과 리트윗 정보도 포함해서
+            relations:["user", "likes", "retweets", "bookmarks"] //좋아요과 리트윗 정보도 포함해서
         });
 
         if (res.locals.user) { //로그인한 사용자가 각 답글에 대해 좋아요/리트윗을 했는지 설정
             replies.forEach((c) => c.setUserLike(res.locals.user))
             replies.forEach((c) => c.setUserRetweet(res.locals.user))
+            replies.forEach((p)=>p.setUserBookmark(res.locals.user));
         }
 
         return res.json(replies); //응답!!!!
@@ -127,13 +131,14 @@ const getPost = async (req: Request, res: Response) => {
     try {
         const post = await Tweet.findOneOrFail({
             where: {identifier, slug},
-            relations: ["user", "likes", "retweets"] //관련 있는 엔티티들을 함게 불러옴
+            relations: ["user", "likes", "retweets", "bookmarks"] //관련 있는 엔티티들을 함게 불러옴
         }
         );
 
         if (res.locals.user) {
             post.setUserLike(res.locals.user); //현 유저가 like를 눌렀는지 확인
             post.setUserRetweet(res.locals.user);
+            post.setUserBookmark(res.locals.user);
         }
 
         return res.send(post); //post 객체를 HTTP 응답의 본문으로 보냄

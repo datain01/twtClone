@@ -8,6 +8,7 @@ import Retweet from './Retweet';
 import Reply from './Reply';
 import { Exclude, Expose } from 'class-transformer';
 import { makeId, slugify } from '../utils/helpers';
+import Bookmark from './Bookmark';
 
 //트윗 엔티티
 @Entity("tweets")
@@ -94,6 +95,18 @@ export default class Tweet extends BaseEntity {
     setUserRetweet(user: User) {
         const index = this.retweets?.findIndex(r => r.username === user.username);
         this.userRetweet = index > -1 ? this.retweets[index].value : 0;
+    }
+
+    // 트윗의 북마크
+    @Exclude()
+    @OneToMany (() => Bookmark, (bookmark)=>bookmark.tweet)
+    bookmarks: Bookmark[];
+
+    protected userBookmark: number;
+
+    setUserBookmark(user: User) {
+        const index = this.bookmarks?.findIndex(b => b.username === user.username);
+        this.userBookmark = index > -1 ? this.bookmarks[index].value : 0;
     }
 
 }
