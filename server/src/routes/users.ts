@@ -9,6 +9,7 @@ import { makeId } from "../utils/helpers";
 import path from "path";
 import { unlinkSync } from "fs";
 import Like from "../entities/Like";
+import Retweet from "../entities/Retweet";
 
 const getLikedTweets = async (req: Request, res: Response) => {
     const {username} = req.params;
@@ -135,12 +136,23 @@ const getUserData = async (req: Request, res: Response) => {
             select: ["username", "createdAt", "nickname", "profileUrn"]
         })
 
-        //해당 유저가 쓴 포스트 정보 가져오기
+        //해당 유저가 쓴 트윗 정보 가져오기
         const tweets = await Tweet.find({
             where: {username: user.username},
-            order: {createdAt: "DESC"},
             relations: ["replies", "likes", "retweets", "user"],
         })
+
+        // 해당 유저가 리트윗한 트윗 정보 가져오기
+        const retweets = await Retweet.find({
+            where: {username: user.username},
+            relations: ["tweet", "tweet.user", "tweet.replies", "tweet.retweets", "tweet.likes"]            
+        })
+        //Tweet 객체에서 직접 가져온 tweets와 달리 리트윗 정보를 담은 Retweet 객체의 배열에서 가져온거라 Retweet 객체의 tweet 속성에서 추출하려면
+        //위의 코드로 변환 작업이 필요함
+        const retweetedTweets = retweets
+        .map(r => r.tweet)
+        .filter(rt => rt.username !== user.username); // 자신의 트윗 제외
+        
 
         //해당 유저가 쓴 답글 정보 가져오기
         // const replies = await Reply.find({
@@ -148,29 +160,32 @@ const getUserData = async (req: Request, res: Response) => {
         //     relations: ["tweets"],
         // })
 
+        //작성한 트윗과 리트윗한 트윗들 합치기
+        const allTweets = [...tweets, ...retweetedTweets];
+
         if (res.locals.user) {
             const {user} = res.locals;
-            tweets.forEach ((t) => t.setUserLike(user));
-            tweets.forEach ((t) => t.setUserRetweet(user));
+            allTweets.forEach ((t) => t.setUserLike(user));
+            allTweets.forEach ((t) => t.setUserRetweet(user));
             // replies.forEach ((t) => t.setUserLike(user));
             // replies.forEach ((t) => t.setUserRetweet(user));
         }
 
         let userData: any[] =[];
 
-        //tweets와 replies를 순회하면서 각 요소를 새로운 객체로 변환하고 userData 배열에 추가함
+        //allTweets를 순환하면서 각 요소를 새로운 객체로 변환하고 userData 배열에 추가함
         //toJSON 메서드는 객체의 속성을 새로운 객체로 복사하는데 사용됨.
         //(원본 객체를 변경하지 않고도 그 속성을 다른 객체에 사용할 수 있도록)
-        tweets.forEach((t) => userData.push({type: "Tweet", ...t.toJSON()}));
+        allTweets.forEach((t) => userData.push({type: "Tweet", ...t.toJSON()}));
         // replies.forEach((r) => userData.push({type: "Reply", ...r.toJSON()}));
 
         //최신 정보가 먼저 오게 순서 정렬
         //array.prototype.sort() 메서드로 userData 배열을 정렬함.
         //sort() 함수는 비교 함수를 인자로 받아 비교한 뒤 순서를 결정함.
         userData.sort((a, b) => {
-            if (b.createdAt > a.createdAt) return 1; 
+            if (b.updatedAt > a.updatedAt) return 1; 
             //비교한 반환값이 0보다 작으면 a를 b보다 낮은 index로 정렬. a가 먼저 옴
-            else if (b.createdAt < a.createdAt) return -1; 
+            else if (b.updatedAt < a.updatedAt) return -1; 
             //비교한 반환값이 0보다 크면  a를 b보다 높은 index로 정렬. b가 먼저 옴
             else return 0;
             //같으면 0을 반환하여 순서를 변경하지 않음
@@ -184,7 +199,6 @@ const getUserData = async (req: Request, res: Response) => {
         return res.status(500).json({error:"문제가 발생했습니다."});
     }
 }
-
 
 
 const router = Router();

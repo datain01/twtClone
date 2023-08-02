@@ -51,7 +51,7 @@ const getTweets = async (req: Request, res: Response) => {
 
     try {
         const tweets = await Tweet.find ({
-            order: {createdAt: "DESC"},
+            order: {updatedAt: "DESC"},
             relations: ["user", "likes", "retweets", "replies"],
             skip: currentPage * perPage,
             take: perPage,
@@ -77,7 +77,7 @@ const getPostReplies = async (req: Request, res: Response) => {
         const post = await Tweet.findOneByOrFail({identifier, slug}); //identifier, slug를 이용해 트윗의 데이터 찾음. 없으면 error catch
         const replies = await Reply.find({ //위에서 찾아낸 트윗의 id를 이용해서 해당 트윗에 대한 모든 reply를 db에서 찾음
             where: {tweetId: post.id},
-            order: {createdAt:"DESC"}, //내림차순으로 정렬
+            order: {updatedAt:"DESC"}, //내림차순으로 정렬
             relations:["user", "likes", "retweets"] //좋아요과 리트윗 정보도 포함해서
         });
 

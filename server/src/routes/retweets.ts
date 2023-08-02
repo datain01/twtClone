@@ -39,11 +39,20 @@ const retweet = async (req: Request, res: Response) => {
                 }
                 else retweet.tweet = post; //답글이 아니면 retweet객체에 tweet을 설정
             await retweet.save(); //db에 저장
+
+            // 리트윗을 눌렀을 때 트윗의 updateAt을 현재 시간으로 업뎃하기
+            post.updatedAt = new Date();
+            await post.save();
         } else if (value === 0) { //리트윗을 취소하려고 하면 retweet 객체를 db에서 삭제함
-            retweet.remove();
+            await retweet.remove();
         } else if (retweet.value != value) { //리트윗을 누르거나 취소하려고 할때 (값에 변동이 있을때) value를 업뎃함
             retweet.value = value;
             await retweet.save();
+
+            // updatedAt 업뎃하기
+            post.updatedAt = new Date();
+            await post.save();
+            
         }
 
         post = await Tweet.findOneOrFail({ //리트윗을 누르거나 취소한 후에 게시글과 관련된 정보를 다시 db에서 가져옴
