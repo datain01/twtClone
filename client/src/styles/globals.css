@@ -142,3 +142,9 @@ div::-webkit-scrollbar-thumb {
 .no-deco {
   text-decoration: none !important; 
 }
+
+.custom-card {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}

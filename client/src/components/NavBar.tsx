@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-import {Bell, Envelope, HouseDoor, PencilSquare, Person, Search, ThreeDots, Twitter} from 'react-bootstrap-icons'
+import {Bell, Bookmarks, Envelope, HouseDoor, PencilSquare, Person, Search, ThreeDots, Twitter} from 'react-bootstrap-icons'
 import Dropdown from 'react-bootstrap/Dropdown'
 import axios from 'axios'
 import { useAuthDispatch, useAuthState } from '@/context/auth'
@@ -57,6 +57,12 @@ const NavBar: React.FC = () => {
             <li className='nav-item'>
                 <Link href="#" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dm" data-bs-original-title="Dm">
                     <Envelope width="24" height="24" fill="black" />
+                </Link>            
+            </li>
+
+            <li className='nav-item'>
+                <Link href="#" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Bookmark" data-bs-original-title="Bookmark">
+                    <Bookmarks width="24" height="24" fill="black" />
                 </Link>            
             </li>
 

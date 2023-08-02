@@ -33,7 +33,7 @@ export default class Tweet extends BaseEntity {
     username: string;
 
     // 트윗의 유저정보
-    @ManyToOne(() => User, (user) => user.tweets)
+    @ManyToOne(() => User, (user) => user.tweets, {onDelete: "CASCADE"})
     @JoinColumn({ name: "username", referencedColumnName: "username" })
     user: User;
 

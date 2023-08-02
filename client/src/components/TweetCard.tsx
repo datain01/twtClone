@@ -87,8 +87,8 @@ const TweetCard: React.FC<TweetCardProps> = ({
 
 
   return (
-        <div className='card' onClick={() => router.push(`/${identifier}/${slug}`)} ref={innerRef}>
-          <div className='card-body'>
+        <div className='card' style={{borderRadius: 0, borderLeft: "none", borderRight: "none"}} onClick={() => router.push(`/${identifier}/${slug}`)} ref={innerRef}>
+          <div className='card-body '>
               <div className="mt-3 ms-4"> 
                     {/* 본 트윗 시작*/}
                     

@@ -64,9 +64,17 @@ const Login = () => {
                     <small>
                         아직 가입하지 않았나요?
                         <Link href="/register">
-                            <span className="m1-1 text-blue-500 uppercase">회원가입</span>
+                            <span className="m1-1 text-blue-500 uppercase ms-1">회원가입</span>
                         </Link>
                     </small>
+                    <div>
+                        <small>
+                            로그인 없이 계속하고 싶다면
+                            <Link href="/">
+                                <span className="m1-1 text-blue-500 uppercase ms-1">홈으로</span>
+                            </Link>
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>

@@ -77,9 +77,17 @@ const Register = () => {
                     <small>
                         이미 가입하셨나요?
                         <Link href="/login">
-                            <span className="m1-1 text-blue-500 uppercase">로그인</span>
+                            <span className="m1-1 text-blue-500 uppercase ms-1">로그인</span>
                         </Link>
                     </small>
+                    <div>
+                        <small>
+                            회원가입 없이 계속하고 싶다면
+                            <Link href="/">
+                                <span className="m1-1 text-blue-500 uppercase ms-1">홈으로</span>
+                            </Link>
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>

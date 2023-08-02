@@ -27,7 +27,7 @@ const searchTweets = async (req:Request, res:Response) => {
         } else {
             // 일반 검색일 경우
             tweets = tweets = await Tweet.find({
-                    where: {content: Like(`%${useSearch}%`)},
+                    where: {content: Like(`%${useSearch}%`)}, //앞뒤로 %를 포함하면 이 단어를 포함한 걸 모두 검색할 수 있음! %를 안붙이면 정확히 일치하는 것만 검색된다
                     relations: ["user", "likes", "retweets", "replies"],
                 });
         }
