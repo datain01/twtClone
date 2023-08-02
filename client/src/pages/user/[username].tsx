@@ -19,6 +19,11 @@ const UserPage = () => {
     // Tweets, Likes 탭 이동용
     const [activeTab, setActiveTab] = useState('tweets');
 
+    // 수정 모드 상태
+    const [editMode, setEditMode] = useState(false);
+    const [nickname, setNickname] = useState(userData?.nickname || '');
+    const [introduce, setIntroduce] = useState(userData?.introduce || '')
+
     // ==========사진 올리기용 시작!!==========
     const [ownProfile, setOwnProfile] = useState(false);
     const {authenticated, user} = useAuthState();
@@ -62,6 +67,25 @@ const UserPage = () => {
     }
       // ==========사진 올리기용 끝!!==========
 
+    // 수정 제출 함수
+
+    const handleEdit= () => {
+      setEditMode(true);
+    }
+
+    const handleSave = async () => {
+      try {
+        await axios.patch(`/users/${username}/update`, {nickname, introduce});
+        // 수정 모드 종료
+        setEditMode(false);
+
+        mutateUser();
+      } catch (error) {
+        console.log(error, "수정 제출 오류")
+      }
+    }
+
+
       
     //데이터가 아직 안들어왔으면 로딩 띄우기
     if (!userData) return( <div> Loading
@@ -71,7 +95,7 @@ const UserPage = () => {
       
       <div style={{height:"100vh", overflow:"auto"}}>
         <input type="file" hidden={true} ref={fileInputRef} onChange={uploadImage}/>
-        <div className="card">
+        <div className="card position-relative">
         {/* 프로필 사진 */}
         {userData.user.profileUrl && (
           <Image
@@ -83,14 +107,47 @@ const UserPage = () => {
           onClick={() => openFileInput("profile")}
           />
         )}
-        
-        <div className="card-body">
-          <h5 className="card-title">{userData.user.nickname}</h5>
-          <p className="card-subtitle text-muted">@{userData.user.username}</p>
-          <p className='card-text mt-3'>자기소개</p>
-          <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
-        </div>
+
+        {/* 닉네임, 자기소개 수정 */}
+        <> 
+        {editMode? (
+        <>
+          {/* 수정모드on */}
+          <span>
+            <button className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3" onClick={handleSave}>저장</button>
+          </span>
+          
+          <div className="card-body">
+          
+            {/* <h5 className="card-title">{userData.user.nickname}</h5> */}
+            <input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)}/>
+            <p className="card-subtitle text-muted">@{userData.user.username}</p>
+            {/* <p className='card-text mt-3'>자기소개 {userData.user.introduce}</p> */}
+            <input type="text" value={introduce} onChange={(e) => setIntroduce(e.target.value)}/>
+            <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
+          </div>
+        </>
+          ) : (
+          <>
+          {/* 수정모드 off */}
+            <span>
+              {/* 자신의 프로필일때만 수정 버튼이 보이도록 */}
+            {ownProfile && <button className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3" onClick={handleEdit}>수정</button>}
+            </span>
+          
+            <div className="card-body">
+            
+              <h5 className="card-title">{userData.user.nickname}</h5>
+              <p className="card-subtitle text-muted">@{userData.user.username}</p>
+              <p className='card-text mt-3'>자기소개 {userData.user.introduce}</p>
+              <p> {dayjs(userData.user.createdAt).format("YYYY.MM.DD")} 가입</p>
+            </div>
+          </>
+          )}
+          
+        </>
       </div>
+      
 
       <ul className="nav nav-tabs">
       <li className="nav-item">

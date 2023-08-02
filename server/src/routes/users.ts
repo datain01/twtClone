@@ -110,6 +110,7 @@ const uploadProfileImage = async (req: Request, res: Response) => {
     
 }
 
+// 현재 접속한 유저의 프로필인지 확인하는 함수
 const ownProfile = async (req:Request, res:Response, next:NextFunction) => {
     const user: User = res.locals.user; //현재 접속한 유저
     const username: string = req.params.username; //URL에서 가져온 유저네임
@@ -151,7 +152,7 @@ const getUserData = async (req: Request, res: Response) => {
         //위의 코드로 변환 작업이 필요함
         const retweetedTweets = retweets
         .map(r => r.tweet)
-        .filter(rt => rt.username !== user.username); // 자신의 트윗 제외
+        .filter(rt => rt && rt.username !== user.username); // 자신의 트윗 제외 (스스로 리트윗 한게 없으면 비교x)
         
 
         //해당 유저가 쓴 답글 정보 가져오기

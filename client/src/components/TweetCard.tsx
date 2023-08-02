@@ -117,7 +117,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
                     {dayjs(createdAt).add(9, 'hour').format('A HH:mm · YYYY년 MM월 DD일')}
                     </p>
                     <p>
-                        리트윗 {retweetScore} 좋아요 {likeScore}
+                        {retweetScore? `리트윗 ${retweetScore}` : null} {likeScore? `좋아요 ${likeScore}` : null}
                     </p>
                     <div className="d-flex justify-content-between">
                     {/* 답글 버튼 */}

@@ -40,6 +40,10 @@ export default class User extends BaseEntity {
     @Length(1, 50, {message:"닉네임은 비울 수 없습니다."})
     nickname:string;
 
+// 자기소개
+    @Column({ nullable: true })
+    introduce:string;
+
 // 트윗
     @OneToMany(()=>Tweet, (tweet) => tweet.user)
     tweets: Tweet[];
