@@ -113,7 +113,9 @@ const UserPage = () => {
         <input type="file" hidden={true} ref={fileInputRef} onChange={uploadImage}/>
         <div className="card position-relative mx-2" style = {{border:"none"}}>
         {/* 프로필 사진 */}
-        {userData.user.profileUrl && (
+        {editMode ? (
+          <>
+          {userData.user.profileUrl && 
           <Image
           src = {userData.user.profileUrl}
           alt = "프로필 사진"
@@ -121,8 +123,18 @@ const UserPage = () => {
           height = {70}
           className='rounded-circle ms-3 mt-3'
           onClick={() => openFileInput("profile")}
-          />
-        )}
+          />}
+          </>) : (<>
+            {userData.user.profileUrl && 
+          <Image
+          src = {userData.user.profileUrl}
+          alt = "프로필 사진"
+          width={70}
+          height = {70}
+          className='rounded-circle ms-3 mt-3'
+          />}        
+          </>)
+        }
 
         {/* 닉네임, 자기소개 수정 */}
         <> 
