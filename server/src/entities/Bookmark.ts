@@ -4,7 +4,7 @@ import User from "./User";
 import Tweet from "./Tweet";
 import Reply from "./Reply";
 
-//좋아요 엔티티
+//북마크 엔티티
 @Entity("bookmarks")
 export default class Bookmark extends BaseEntity {
     @Column()

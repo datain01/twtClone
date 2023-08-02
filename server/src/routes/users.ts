@@ -3,7 +3,6 @@ import userMiddleware from "../middlewares/user";
 import authMiddleware from "../middlewares/auth";
 import User from "../entities/User";
 import Tweet from "../entities/Tweet";
-import Reply from "../entities/Reply";
 import multer, { FileFilterCallback } from "multer";
 import { makeId } from "../utils/helpers";
 import path from "path";
@@ -11,6 +10,44 @@ import { unlinkSync } from "fs";
 import Like from "../entities/Like";
 import Retweet from "../entities/Retweet";
 import { validate } from "class-validator";
+import Bookmark from "../entities/Bookmark";
+
+const getBookmarks = async (req:Request, res: Response) => {
+    const {username} = req.params;
+    const currentUser = res.locals.user;
+
+    if ( username !== currentUser.username) {
+        return res.status(403).json({error: "자신의 북마크만 볼 수 있습니다."})
+    }
+
+    try {
+        const user = await User.findOneByOrFail({username});
+        // 위에서 찾은 사용자의 좋아요 표시를 찾고 관련 트윗들을 찾기
+
+        const bookmarkedTweets = await Bookmark.find({
+            where: {username},
+            order: {createdAt: "DESC"},
+            relations: ["tweet", "tweet.user", "tweet.replies", "tweet.likes", "tweet.retweets", "tweet.bookmarks"]
+        });
+
+        const noReplyBookmarks = bookmarkedTweets.filter(l => l.tweet !== null);
+
+        // 좋아요, 리트윗 남긴 것들 표시하기
+        noReplyBookmarks.forEach((b) => {
+            b.tweet.setUserLike(user);
+            b.tweet.setUserRetweet(user);
+            b.tweet.setUserBookmark(user);
+        })
+
+        // 북마크 객체에서 트윗들을 추출하기
+        const tweets = noReplyBookmarks.map((b) => b.tweet);
+        return res.json(tweets);
+    } catch (error) {
+        console.log("북마크 가져오기 오류", error);
+        return res.status(500).json({error: "문제가 발생했습니다."})
+    }
+}
+
 
 // auth.ts에서 사용했던걸 그대로 가져옴
 const mapError = (errors: Object[]) => {
@@ -256,6 +293,7 @@ router.post(
     upload.single("file"), 
     uploadProfileImage);
 router.get("/:username/likes", userMiddleware, getLikedTweets);
+router.get("/:username/bookmarks", userMiddleware, authMiddleware, getBookmarks);
 router.patch("/:username/profile", userMiddleware, authMiddleware, updateProfile);
 
 export default router;

@@ -61,7 +61,17 @@ const NavBar: React.FC = () => {
             </li>
 
             <li className='nav-item'>
-                <Link href="#" className='nav-link py-3 border-bottom rounded-0' data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Bookmark" data-bs-original-title="Bookmark">
+                <Link href={`/user/${user?.username}/bookmark`} 
+                className='nav-link py-3 border-bottom rounded-0' 
+                data-bs-toggle="tooltip" data-bs-placement="right" 
+                aria-label="Bookmark" data-bs-original-title="Bookmark"
+                onClick={(e)=>{
+                    if (!authenticated) {
+                        e.preventDefault();
+                        router.push("login");
+                    }
+                }}
+                >
                     <Bookmarks width="24" height="24" fill="black" />
                 </Link>            
             </li>

@@ -43,7 +43,7 @@ export default class User extends BaseEntity {
 
 // 자기소개
     @Column({ nullable: true })
-    @Length(0, 50, {message:"자기소개는 50자가 최대입니다.", groups: ["profileUpdate"]})
+    @Length(0, 50, {message:"자기소개는 1~50 자이어야 합니다.", groups: ["profileUpdate"]})
     introduce:string;
 
 // 트윗
