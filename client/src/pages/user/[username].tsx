@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import axios from 'axios';
-import { BorderOuter } from 'react-bootstrap-icons';
 
 const UserPage = () => {
     const router = useRouter();
@@ -204,7 +203,7 @@ const UserPage = () => {
       <li className="nav-item">
         <a
           className={`nav-link ${activeTab === 'tweets' ? 'active' : ''}`}
-          onClick={() => setActiveTab('tweets')}
+          onClick={(e) => {e.preventDefault(); setActiveTab('tweets')}}
           href="#tweets">
           Tweets
         </a>
@@ -212,7 +211,7 @@ const UserPage = () => {
       <li className="nav-item">
         <a
           className={`nav-link ${activeTab === 'likes' ? 'active' : ''}`}
-          onClick={() => setActiveTab('likes')}
+          onClick={(e) => {e.preventDefault(); setActiveTab('likes')}}
           href="#likes">
           Likes
         </a>

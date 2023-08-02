@@ -82,7 +82,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div ref={scrollContainer} style={{height:"100vh", overflow:"auto"}}>
+    <div ref={scrollContainer} style={{height:"100vh", overflow:"auto", background:"light"}}>
       {isInitialLoading && <p className='text-lg text-center'>Loading...</p>}
       {tweets?.map((tweet, index)=>(
         <TweetCard
