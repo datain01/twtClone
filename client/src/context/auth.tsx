@@ -51,19 +51,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = async (username: string, password: string) => {
-    try {
-      const res = await axios.post(
-        "/auth/login",
-        { username, password },
-        { withCredentials: true }
-      );
-      setUser(res.data?.user); //user 상태(state)에 현재 유저의 정보를 저장
-      setAuthenticated(true); //로그인 인증이 됐다고 true 처리
+    const res = await axios.post(
+      "/auth/login",
+      { username, password },
+      { withCredentials: true }
+    );
+    setUser(res.data?.user); //user 상태(state)에 현재 유저의 정보를 저장
+    setAuthenticated(true); //로그인 인증이 됐다고 true 처리
 
-      router.push("/");
-    } catch (error) {
-      console.log(error, "로그인 오류");
-    }
+    // 로그인 성공 시 홈으로 리다이렉트
+    router.push("/");
   };
 
   const logout = async () => {

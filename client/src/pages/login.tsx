@@ -12,9 +12,14 @@ const Login = () => {
 
   const { login } = useAuth();
 
-  const handleSubmit = async (event: FormEvent) => {
+  const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
-    login(username, password);
+    try {
+      await login(username, password);
+    } catch (error: any) {
+      console.log(error, "로그인 오류");
+      setErrors(error.response.data || {});
+    }
   };
 
   return (
@@ -26,7 +31,7 @@ const Login = () => {
         <div className="card" style={{ width: "26rem" }}>
           <div className="card-body">
             <h4 className="card-title mb-3">로그인</h4>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleLogin}>
               <InputGroup
                 placeholder="Username"
                 value={username}
