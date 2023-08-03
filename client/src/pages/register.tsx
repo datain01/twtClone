@@ -61,6 +61,7 @@ const Register = () => {
                         placeholder="Password"
                         value={password}
                         setValue={setPassword}
+                        type="password"
                         error={errors.password}
                         />
                         <InputGroup

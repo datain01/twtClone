@@ -53,6 +53,7 @@ const Login = () => {
                         placeholder="Password"
                         value={password}
                         setValue={setPassword}
+                        type="password" //자동으로 암호처리
                         error={errors.password}
                         />
                         

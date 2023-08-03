@@ -5,6 +5,7 @@ import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { BookmarkCheck } from 'react-bootstrap-icons';
 import useSWR from 'swr';
 
 const Bookmark = () => {
@@ -20,12 +21,16 @@ const Bookmark = () => {
 
     return (
         <div style={{height:"100vh", overflow:"auto"}}>
-        <div>
-            {/* 검색해서 나온 트윗들 나열 */}
-            {bookmarksData?.map((tweet: Tweet) =>(
-            <TweetCard key={tweet.identifier} tweet={tweet}/>
-            ))}
-        </div>
+            <div className='container border-bottom fs-3 fw-light ms-4' style={{height:"3rem"}}>
+                북마크 목록
+            </div>
+                <div>
+                    {/* 검색해서 나온 트윗들 나열 */}
+                    {bookmarksData?.map((tweet: Tweet) =>(
+                    <TweetCard key={tweet.identifier} tweet={tweet} mutate={mutateBookmark}/>
+                    ))}
+                </div>
+            
         </div>
     )
 }
