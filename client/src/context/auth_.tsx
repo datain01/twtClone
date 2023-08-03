@@ -1,64 +1,86 @@
 import { User } from "@/types";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import axios from "axios";
-import React, { createContext, useContext, useEffect, useState } from "react";
 
-// State 관리를 위한 객체의 형태 정의
-interface AuthContextProps {
-  authenticated: boolean;
-  user: User | undefined;
-  loading: boolean;
+interface State {
+  authenticated: boolean; //로그인 상태
+  user: User | undefined; //로그인한 사용자의 정보
+  loading: boolean; //로딩 중 여부
+} //애플리케이션의 상태를 나타내는 객체의 형태를 정의
+
+interface Action {
+  type: string; //액션의 종류
+  payload?: any; //액션에 따라 상태를 변경하는데 필요한 "추가 데이터"
 }
 
-// 인증 상태를 관리하기 위한 Context 생성
-const AuthContext = createContext<AuthContextProps>({
+const StateContext = createContext<State>({
+  //Context API 사용. 이 상태를 필요로하는 모든 컴포넌트에게 공유
   authenticated: false,
   user: undefined,
   loading: false,
 });
 
-// 인증 상태를 관리하고 하위 컴포넌트에 전달하는 역할을 하는 컴포넌트
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  // 인증 상태, 사용자 정보, 로딩 상태를 관리하는 상태 변수 선언
-  const [authenticated, setAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
+const DispatchContext = createContext<any>(null);
 
-  // 컴포넌트가 마운트 될 때 사용자 정보를 가져와 상태를 initialize 하는 코드
-  // 마운트? 리액트에서 특정 컴포넌트가 DOM에 처음으로 삽입되는 과정을 의미!
+const reducer = (state: State, { type, payload }: Action) => {
+  switch (type) {
+    case "LOGIN":
+      return {
+        ...state,
+        authenticated: true,
+        user: payload,
+      };
+    case "LOGOUT":
+      return {
+        ...state,
+        authenticated: false,
+        user: undefined,
+      };
+    case "STOP_LOADING":
+      return {
+        ...state,
+        loading: false,
+      };
+    default:
+      throw new Error(`unhandled action type: ${type}`);
+  }
+};
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [state, defaultDispatch] = useReducer(reducer, {
+    user: null,
+    authenticated: false,
+    loading: true,
+  }); //첫번째 인자: reducer, 두번째 인자: initial state
+
+  const dispatch = (type: string, payload?: any) => {
+    defaultDispatch({ type, payload });
+  };
+
   useEffect(() => {
-    //컴포넌트의 라이프사이클에서 특정 시점에 작업을 수행하게 해줌. 여기서는 두번째 인자로
-    //빈 배열 '[]'을 전달해줬는데, 이건 컴포넌트가 마운트되는 시점에만 내부의 코드를 실행하라는 뜻
     async function loadUser() {
       try {
-        // 서버에서 /auth/me 경로로 GET 요청을 보내, 로그인된 사용자의 정보를 불러옴
         const res = await axios.get("/auth/me");
-        setUser(res.data); //윗줄에서 불러온 사용자의 정보를 상태로 설정하고
-        setAuthenticated(true); // 인증 상태를 true로 설정
+        dispatch("LOGIN", res.data);
       } catch (error) {
-        console.log(error); //오류가 발생하면 실행되는 부분
+        console.log(error);
       } finally {
-        //무조건 오류 여부와 상관없이 무조건 실행되는 코드. 즉, loading은 무조건 false로 세팅
-        setLoading(false);
+        dispatch("STOP_LOADING");
       }
     }
-    loadUser(); //선언한 loadUser 함수를 호출하여 사용자 정보를 불러오는 작업을 시작
+    loadUser();
   }, []);
 
-  //   하위 컴포넌트{children}에 authenticated, user, loading의 State를 전달하는 역할을 함
   return (
-    <>
-      <AuthContext.Provider value={{ authenticated, user, loading }}>
-        {children}
-      </AuthContext.Provider>
-    </>
+    <DispatchContext.Provider value={dispatch}>
+      <StateContext.Provider value={state}>{children}</StateContext.Provider>
+    </DispatchContext.Provider>
   );
 };
 
-// 커스텀 훅 생성
-//AuthContext는 그냥 createContext를 통해 생성된 State의 컨테이너 같은거고, useContext를 이용해서
-//사용을 하겠다고 호출을 해야함.
-//꼭 useAuth의 형태로 커스텀 훅을 만들 필요는 없지만, useContext()의 형태로 매번 호출을 해야하니까
-//그냥 더 보기 좋게 useAuth로 선언...
-export const useAuth = () => {
-  return useContext(AuthContext);
+export const useAuthState = () => {
+  return useContext(StateContext);
+};
+export const useAuthDispatch = () => {
+  return useContext(DispatchContext);
 };

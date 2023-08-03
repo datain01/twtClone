@@ -16,16 +16,27 @@ import {
 } from "react-bootstrap-icons";
 import Dropdown from "react-bootstrap/Dropdown";
 import axios from "axios";
-import { useAuth } from "@/context/auth";
+import { useAuthDispatch, useAuthState } from "@/context/auth_";
 
+// auth.tsx 수정전 이전 NavBar 코드
 const NavBar: React.FC = () => {
+  const { loading, authenticated } = useAuthState();
+  const dispatch = useAuthDispatch();
   const router = useRouter();
-  const { logout, user, authenticated, loading } = useAuth();
 
-  const handleLogout = () => {
-    logout().then(() => {
-      window.location.reload();
-    });
+  const { user } = useAuthState();
+
+  const logout = () => {
+    axios
+      .post("/auth/logout")
+      .then(() => {
+        //then 메서드는 자바스크립트에서 Promise가 성공적으로 완료됐을때 호출되는 콜백함수
+        dispatch("LOGOUT"); //디스패치 케이스 중 로그아웃을 가져오는 것
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -202,7 +213,7 @@ const NavBar: React.FC = () => {
             </Dropdown.Item>
             <Dropdown.Divider />
             {!loading && authenticated ? (
-              <Dropdown.Item onClick={handleLogout}>Sign Out</Dropdown.Item>
+              <Dropdown.Item onClick={logout}>Sign Out</Dropdown.Item>
             ) : (
               <>
                 <Dropdown.Item href="/login">Login</Dropdown.Item>

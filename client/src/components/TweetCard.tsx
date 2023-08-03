@@ -1,4 +1,4 @@
-import { useAuthState } from "@/context/auth";
+import { useAuth } from "@/context/auth";
 import { Tweet } from "@/types";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -41,7 +41,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
   innerRef,
 }) => {
   const router = useRouter();
-  const { user: currentUser, authenticated } = useAuthState();
+  const { user: currentUser, authenticated } = useAuth();
 
   const currentUserProfileUrl =
     currentUser?.profileUrl ||

@@ -1,20 +1,42 @@
 import { useRouter } from "next/router";
 import React, { FormEvent, useState } from "react";
+import axios from "axios";
 import InputGroup from "@/components/InputGroup";
 import Link from "next/link";
-import { useAuth } from "@/context/auth";
+import { useAuthDispatch } from "@/context/auth_";
 
+// 이전에 만들었던 로그인 페이지 저장해둔거
 const Login = () => {
   let router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
 
-  const { login } = useAuth();
+  const dispatch = useAuthDispatch();
 
   const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    login(username, password);
+    //폼 제출 이벤트를 처리하는 비동기 함수
+    event.preventDefault(); //폼 제출에 의한 새로고침 방지
+    try {
+      const res = await axios.post(
+        "/auth/login",
+        {
+          //axios.post를 이용해 POST 요청 보냄
+          //axios를 통해 클라이언트와 서버 간의 통신 가능
+          password,
+          username,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch("LOGIN", res.data?.user);
+      console.log("res", res);
+      router.push("/");
+    } catch (error: any) {
+      console.log("error", error);
+      setErrors(error.response.data || {});
+    }
   };
 
   return (
@@ -37,7 +59,7 @@ const Login = () => {
                 placeholder="Password"
                 value={password}
                 setValue={setPassword}
-                type="password" //자동으로 암호처리되게함
+                type="password" //자동으로 암호처리
                 error={errors.password}
               />
 
