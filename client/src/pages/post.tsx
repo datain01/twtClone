@@ -69,6 +69,7 @@ const PostTweet = () => {
 
 export default PostTweet;
 
+//getServerSideProp은 Next.js에서 제공하는 기능. 서버 측에서 페이지를 렌더링하기 전에 실행되는 함수
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   try {
     const cookie = req.headers.cookie;

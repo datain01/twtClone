@@ -1,16 +1,18 @@
-import { useRouter } from "next/router";
 import React, { FormEvent, useState } from "react";
 import InputGroup from "@/components/InputGroup";
 import Link from "next/link";
 import { useAuth } from "@/context/auth";
+import { useRouter } from "next/router";
 
 const Login = () => {
-  let router = useRouter();
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
 
-  const { login } = useAuth();
+  const { login, authenticated } = useAuth();
+
+  if (authenticated) router.push("/");
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();

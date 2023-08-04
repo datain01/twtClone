@@ -15,7 +15,6 @@ import {
   Twitter,
 } from "react-bootstrap-icons";
 import Dropdown from "react-bootstrap/Dropdown";
-import axios from "axios";
 import { useAuth } from "@/context/auth";
 
 const NavBar: React.FC = () => {
