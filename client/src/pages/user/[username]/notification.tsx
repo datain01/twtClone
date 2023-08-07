@@ -1,19 +1,34 @@
 import NotifyGroup from "@/components/NotifyGroup";
+import { useAuth } from "@/context/auth";
+import { useNotify } from "@/context/notify";
 import { Notification } from "@/types";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import useSWR from "swr";
+import axios from "axios";
+import React, { useEffect } from "react";
 
 const NotificationPage = () => {
-  const router = useRouter();
-  const username = router.query.username;
+  const { notifications, fetchNotifications } = useNotify();
+  const { user } = useAuth();
 
-  const { data: notificationsData, error: notificationsError } = useSWR<any>(
-    username ? `/users/${username}/notifications` : null,
-    {
-      refreshInterval: 10000,
+  const markAsRead = async () => {
+    try {
+      const username = user?.username;
+      await axios.put(`/users/${username}/notifications/read`);
+    } catch (error) {
+      console.log(error, "읽음 표시 오류");
     }
-  );
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      //서버에 읽은 것으로 표시하는 요청을 보내는 로직
+      await markAsRead();
+
+      // 알림을 다시 가져옴
+      fetchNotifications();
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div style={{ height: "100vh", overflow: "auto" }}>
@@ -25,8 +40,13 @@ const NotificationPage = () => {
       </div>
       <div>
         {/* 검색해서 나온 트윗들 나열 */}
-        {notificationsData?.map((notification: Notification) => (
-          <NotifyGroup key={notification.id} notification={notification} />
+        {notifications?.map((notification: Notification) => (
+          <NotifyGroup
+            key={notification.id}
+            notification={notification}
+            slug={notification.tweet?.slug || ""}
+            identifier={notification.tweet?.identifier || ""}
+          />
         ))}
       </div>
     </div>

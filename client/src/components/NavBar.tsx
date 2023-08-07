@@ -16,10 +16,14 @@ import {
 } from "react-bootstrap-icons";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useAuth } from "@/context/auth";
+import { useNotify } from "@/context/notify";
 
 const NavBar: React.FC = () => {
   const router = useRouter();
   const { logout, user, authenticated, loading } = useAuth();
+  const { notifications } = useNotify();
+
+  const unread = notifications?.filter((n) => !n.read).length || 0;
 
   const handleLogout = () => {
     logout().then(() => {
@@ -73,14 +77,24 @@ const NavBar: React.FC = () => {
 
         <li className="nav-item">
           <Link
-            href="#"
+            href={`/user/${user?.username}/notification`}
             className="nav-link py-3 border-bottom rounded-0"
             data-bs-toggle="tooltip"
             data-bs-placement="right"
             aria-label="Alarm"
             data-bs-original-title="Alarm"
           >
-            <Bell width="24" height="24" fill="black" />
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <Bell width="24" height="24" fill="black" />
+              {unread > 0 && (
+                <span
+                  className="badge bg-danger"
+                  style={{ position: "absolute", top: "-10px", right: "-10px" }}
+                >
+                  {unread}
+                </span>
+              )}
+            </div>
           </Link>
         </li>
 

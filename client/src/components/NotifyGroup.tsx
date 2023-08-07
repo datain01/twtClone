@@ -1,13 +1,20 @@
 import { Notification } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { ArrowRepeat, Chat, HeartFill } from "react-bootstrap-icons";
 
-interface NottifyGroupProps {
+interface NotifyGroupProps {
   notification: Notification;
+  slug: string;
+  identifier: string;
 }
 
-const NotifyGroup: React.FC<NottifyGroupProps> = ({ notification }) => {
+const NotifyGroup: React.FC<NotifyGroupProps> = ({
+  notification,
+  slug,
+  identifier,
+}) => {
   const getNotificationText = () => {
     if (notification.type === "like") {
       return "님이 마음에 들어합니다.";
@@ -20,34 +27,58 @@ const NotifyGroup: React.FC<NottifyGroupProps> = ({ notification }) => {
     }
   };
 
+  const handleProfileClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = `/user/${notification.sender.username}`;
+  };
+
   return (
     <div>
-      <div
-        className="card"
-        style={{
-          width: "100%",
-          borderRadius: 0,
-          borderLeft: "none",
-          borderRight: "none",
-        }}
-      >
-        <div className="card-body">
-          <h5 className="card-title">
-            <span className="me-2">
-              {notification.type === "like" && <HeartFill />}
-              {notification.type === "retweet" && <ArrowRepeat />}
-              {notification.type === "reply" && <Chat />}
-            </span>
-            <Image src={notification.sender.profileUrl} alt="프로필 이미지" />
-            {/* sender의 프사 */}
-          </h5>
-          <p className="card-text">
-            {notification.sender.username} {getNotificationText()}
-          </p>
-          <p className="text-muted">{notification.tweet?.content}</p>
+      <Link href={`/${identifier}/${slug}`} style={{ textDecoration: "none" }}>
+        <div
+          className="card"
+          style={{
+            width: "100%",
+            borderRadius: 0,
+            borderLeft: "none",
+            borderRight: "none",
+            backgroundColor: notification.read ? "#D3D3D3" : "white",
+          }}
+        >
+          <div className="card-body">
+            <h5 className="card-title">
+              <span className="me-2">
+                {notification.type === "like" && <HeartFill fill="red" />}
+                {notification.type === "retweet" && (
+                  <ArrowRepeat fill="#38B2AC" />
+                )}
+                {notification.type === "reply" && <Chat />}
+              </span>
+
+              <span onClick={handleProfileClick}>
+                <Image
+                  src={notification.sender.profileUrl}
+                  alt="프로필 이미지"
+                  width={40}
+                  height={40}
+                  className="rounded-circle"
+                />
+              </span>
+
+              {/* sender의 프사 */}
+            </h5>
+          </div>
+          <div className="ms-3">
+            <p className="card-text">
+              {notification.sender.nickname} {getNotificationText()}
+            </p>
+            <p className="text-muted">{notification.tweet?.content}</p>
+          </div>
+
           {/* 내 트윗의 내용 일부 */}
         </div>
-      </div>
+      </Link>
     </div>
   );
 };
