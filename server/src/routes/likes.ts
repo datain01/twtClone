@@ -5,6 +5,7 @@ import User from "../entities/User";
 import Tweet from "../entities/Tweet";
 import Like from "../entities/Like";
 import Reply from "../entities/Reply";
+import Notification from "../entities/Notification";
 
 const like = async (req: Request, res: Response) => {
     const {identifier, slug, replyIdentifier, value} = req.body;
@@ -15,14 +16,20 @@ const like = async (req: Request, res: Response) => {
 
     try {
         const user:User = res.locals.user;
-        let post: Tweet = await Tweet.findOneByOrFail({identifier, slug});
+        let post: Tweet = await Tweet.findOneOrFail({
+            where: {identifier, slug},
+            relations: ["user"]
+        });
         //게시물 찾기
         let like: Like | undefined; //좋아요 정보를 저장할 변수 타입
         let reply: Reply; //답글 정보를 저장할 변수 타입
 
         if (replyIdentifier) {
             //답글 identifier가 있으면 답글 like 찾기 (=답글일 경우 로직 실행)
-            reply = await Reply.findOneByOrFail({identifier: replyIdentifier}); //만약 변수를 찾지 못하면 error catch
+            reply = await Reply.findOneOrFail({
+                where: { identifier: replyIdentifier },
+                relations: ["user"] // 사용자 관계 포함
+              }); //만약 변수를 찾지 못하면 error catch
             like = await Like.findOneBy({username: user.username, replyId:reply.id});
         } else {
             like = await Like.findOneBy({username: user.username, tweetId:post.id});
@@ -34,11 +41,29 @@ const like = async (req: Request, res: Response) => {
             like = new Like ();
             like.user = user;
             like.value = value;
+
+            let receiver: User;
+
                 if (reply) { //답글이 있으면 like객체에 reply를 설정
                     like.reply = reply;
+                    receiver = reply.user;
                 }
-                else like.tweet = post; //답글이 아니면 like객체에 tweet을 설정
+                else {
+                    like.tweet = post; //답글이 아니면 like객체에 tweet을 설정
+                }
             await like.save(); //db에 저장
+
+            if (value === 1) {
+                const notification = new Notification();
+                notification.type = "like";
+                notification.sender = user;
+                notification.receiver = post.user;
+                notification.tweet = post;
+                notification.like = like;
+                notification.read = false; //읽음상태 설정
+                
+                await notification.save();
+            }
         } else if (value === 0) { //좋아요를 취소하려고 하면 like 객체를 db에서 삭제함
             like.remove();
         } else if (like.value != value) { //좋아요를 누르거나 취소하려고 할때 (값에 변동이 있을때) value를 업뎃함

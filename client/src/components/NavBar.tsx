@@ -86,19 +86,6 @@ const NavBar: React.FC = () => {
 
         <li className="nav-item">
           <Link
-            href="#"
-            className="nav-link py-3 border-bottom rounded-0"
-            data-bs-toggle="tooltip"
-            data-bs-placement="right"
-            aria-label="Dm"
-            data-bs-original-title="Dm"
-          >
-            <Envelope width="24" height="24" fill="black" />
-          </Link>
-        </li>
-
-        <li className="nav-item">
-          <Link
             href={`/user/${user?.username}/bookmark`}
             className="nav-link py-3 border-bottom rounded-0"
             data-bs-toggle="tooltip"
@@ -132,19 +119,6 @@ const NavBar: React.FC = () => {
             }}
           >
             <Person width="24" height="24" fill="black" />
-          </Link>
-        </li>
-
-        <li className="nav-item">
-          <Link
-            href="#"
-            className="nav-link py-3 border-bottom rounded-0"
-            data-bs-toggle="tooltip"
-            data-bs-placement="right"
-            aria-label="Option"
-            data-bs-original-title="Option"
-          >
-            <ThreeDots width="24" height="24" fill="black" />
           </Link>
         </li>
 

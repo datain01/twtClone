@@ -219,7 +219,7 @@ const UserPage = () => {
                     className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3"
                     onClick={handleEdit}
                   >
-                    수정
+                    프로필 수정
                   </button>
                 )}
               </span>

@@ -6,6 +6,7 @@ import User from "../entities/User";
 import Tweet from "../entities/Tweet";
 import Reply from "../entities/Reply";
 import { Like } from "typeorm";
+import Notification from "../entities/Notification";
 
 // 트윗 검색하기
 const searchTweets = async (req:Request, res:Response) => {
@@ -105,7 +106,10 @@ const createPostReply = async (req: Request, res: Response) => {
     const content = req.body.content;
 
     try {
-        const post = await Tweet.findOneByOrFail({identifier, slug});
+        const post = await Tweet.findOneOrFail({
+            where: {identifier, slug},
+            relations: ["user"]
+        });
         const reply = new Reply();
         reply.content = content;
         reply.user = res.locals.user;
@@ -116,6 +120,16 @@ const createPostReply = async (req: Request, res: Response) => {
         }
 
         await reply.save();
+            const notification = new Notification();
+            notification.type = "reply";
+            notification.sender = reply.user;
+            notification.receiver = post.user;
+            notification.tweet = post;
+            notification.reply = reply;
+            notification.read = false; //읽음상태 설정
+            
+            await notification.save();
+        
         return res.json(reply);
 
     } catch (error) {

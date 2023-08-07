@@ -44,3 +44,15 @@ export interface Reply {
     retweetScore: number;
     userBookmark: number;
 }
+
+export interface Notification {
+    id: string;
+    type: string;
+    sender: User;
+    receiver: User;
+    tweet: Tweet;
+    like: string;
+    retweet: string;
+    reply: string;
+    read: boolean;
+}

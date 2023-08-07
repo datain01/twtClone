@@ -11,6 +11,26 @@ import Like from "../entities/Like";
 import Retweet from "../entities/Retweet";
 import { validate } from "class-validator";
 import Bookmark from "../entities/Bookmark";
+import Notification from "../entities/Notification";
+
+const getNotifications = async (req: Request, res: Response) => {
+    try {
+      const receiverId = res.locals.user.id;
+  
+      const notifications = await Notification.find({
+        where: { receiver: { id: receiverId } },
+        relations: ["sender", "tweet", "like", "retweet", "reply"],
+        order: { createdAt: "DESC" },
+      });
+  
+      return res.json(notifications);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "문제가 발생했습니다." });
+    }
+  };
+
+
 
 const getBookmarks = async (req:Request, res: Response) => {
     const {username} = req.params;
@@ -295,5 +315,6 @@ router.post(
 router.get("/:username/likes", userMiddleware, getLikedTweets);
 router.get("/:username/bookmarks", userMiddleware, authMiddleware, getBookmarks);
 router.patch("/:username/profile", userMiddleware, authMiddleware, updateProfile);
+router.get ("/:username/notifications", authMiddleware, userMiddleware, getNotifications )
 
 export default router;

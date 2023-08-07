@@ -5,6 +5,7 @@ import User from "../entities/User";
 import Tweet from "../entities/Tweet";
 import Retweet from "../entities/Retweet";
 import Reply from "../entities/Reply";
+import Notification from "../entities/Notification";
 
 const retweet = async (req: Request, res: Response) => {
     const {identifier, slug, replyIdentifier, value} = req.body;
@@ -15,14 +16,20 @@ const retweet = async (req: Request, res: Response) => {
 
     try {
         const user:User = res.locals.user;
-        let post: Tweet = await Tweet.findOneByOrFail({identifier, slug});
+        let post: Tweet = await Tweet.findOneOrFail({
+            where: {identifier, slug},
+            relations: ["user"]
+        });
         //게시물 찾기
         let retweet: Retweet | undefined; //리트윗 정보를 저장할 변수 타입
         let reply: Reply; //답글 정보를 저장할 변수 타입
 
         if (replyIdentifier) {
             //답글 identifier가 있으면 답글 retweet 찾기 (=답글일 경우 로직 실행)
-            reply = await Reply.findOneByOrFail({identifier: replyIdentifier}); //만약 변수를 찾지 못하면 error catch
+            reply = await await Reply.findOneOrFail({
+                where: { identifier: replyIdentifier },
+                relations: ["user"] // 사용자 관계 포함
+              }); //만약 변수를 찾지 못하면 error catch
             retweet = await Retweet.findOneBy({username: user.username, replyId:reply.id});
         } else {
             retweet = await Retweet.findOneBy({username: user.username, tweetId:post.id});
@@ -34,11 +41,26 @@ const retweet = async (req: Request, res: Response) => {
             retweet = new Retweet ();
             retweet.user = user;
             retweet.value = value;
+
+            let receiver: User;
                 if (reply) { //답글이 있으면 retweet객체에 reply를 설정
                     retweet.reply = reply;
+                    receiver = reply.user;
                 }
                 else retweet.tweet = post; //답글이 아니면 retweet객체에 tweet을 설정
             await retweet.save(); //db에 저장
+
+            if (value === 1) {
+                const notification = new Notification();
+                notification.type = "retweet";
+                notification.sender = user;
+                notification.receiver = post.user;
+                notification.tweet = post;
+                notification.retweet = retweet;
+                notification.read = false; //읽음상태 설정
+                
+                await notification.save();
+            }
 
             // 리트윗을 눌렀을 때 트윗의 updateAt을 현재 시간으로 업뎃하기
             post.updatedAt = new Date();
