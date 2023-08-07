@@ -162,7 +162,7 @@ const UserPage = () => {
                   className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3"
                   onClick={handleSave}
                 >
-                  저장
+                  프로필 저장
                 </button>
               </span>
 

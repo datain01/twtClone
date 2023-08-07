@@ -23,9 +23,9 @@ const NotificationPage = () => {
       //서버에 읽은 것으로 표시하는 요청을 보내는 로직
       await markAsRead();
 
-      // 알림을 다시 가져옴
+      // 서버에 재요청해서 알림을 다시 가져옴
       fetchNotifications();
-    }, 3000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);

@@ -175,7 +175,7 @@ const NavBar: React.FC = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item href="#">Settings</Dropdown.Item>
+            <Dropdown.Item href="#">Dark Mode</Dropdown.Item>
             <Dropdown.Item
               href={`/user/${user?.username}`}
               onClick={(e) => {
