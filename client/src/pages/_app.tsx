@@ -36,8 +36,8 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <AuthProvider>
         <NotificationProvider>
-          {/* login, register 페이지가 아니면 NavBar를 보여주고, 좌측에 9(3rem)의 공백을 띄움 */}
-          <div className={`d-flex ${authRoute ? "" : "vh-100"}`}>
+          {/* login, register 페이지가 아니면 NavBar를 보여줌*/}
+          <div className="d-flex">
             {!authRoute && <NavBar />}
             <div className="flex-grow-1">
               <Component {...pageProps} />

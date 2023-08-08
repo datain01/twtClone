@@ -9,7 +9,6 @@ const inter = Inter({ subsets: ["latin"] });
 
 const Home: NextPage = () => {
   //ref가 펜이라면 useRef는 메모종이. scrollContainer는 ref를 이용해서 주소를 메모에 기록해둔거임...
-  const scrollContainer = useRef(null); //특정 스크롤 컨테이너의 주소를 기록하고 그 컨테이너의 DOM 요소에 접근할 수 있음
   const observedElementRef = useRef(null); //특정 엘리먼트의 주소를 기록. 여기서는 tweetCard가 그 엘리먼트
 
   const getKey = (pageIndex: number, previousPageData: Tweet[]) => {
@@ -68,17 +67,14 @@ const Home: NextPage = () => {
           observer.unobserve(element); //요소에 대한 관찰 중지
         }
       },
-      { root: scrollContainer.current, threshold: 0.5 } //두번째 매개변수: 옵션 객체. threshold는 교차영역 비율을 뜻함 (0.0~1.0).
+      { threshold: 0.5 } //두번째 매개변수: 옵션 객체. threshold는 교차영역 비율을 뜻함 (0.0~1.0).
       // 1은 요소의 전체 영역이 뷰포트와 교차했을때 콜백함수를 호출하도록함
     );
     observer.observe(element); //를 호출하여 요소에 대한 관찰 시작
   };
 
   return (
-    <div
-      ref={scrollContainer}
-      style={{ height: "100vh", overflow: "auto", background: "light" }}
-    >
+    <div style={{ overflow: "auto", background: "light" }}>
       {isInitialLoading && <p className="text-lg text-center">Loading...</p>}
       {tweets?.map((tweet, index) => (
         <TweetCard
