@@ -56,7 +56,6 @@ const bookmark = async (req: Request, res: Response) => {
         post.replies.forEach(c => c.setUserBookmark(user)); //모든 답글들에 사용자가 좋아요를 눌렀는지 설정하는 메서드 호출
         //프론트에서 각 게시글이나 답글이 현재 사용자에게 좋아요를 받았는지 쉽게 알 수 있음
 
-        console.log("북마크서버성공")
         return res.json(post); //프론트로 응답
     } catch (error) {
         console.log(error);

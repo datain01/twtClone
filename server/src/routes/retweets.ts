@@ -6,6 +6,7 @@ import Tweet from "../entities/Tweet";
 import Retweet from "../entities/Retweet";
 import Reply from "../entities/Reply";
 import Notification from "../entities/Notification";
+import { io } from "../socket";
 
 const retweet = async (req: Request, res: Response) => {
     const {identifier, slug, replyIdentifier, value} = req.body;
@@ -60,6 +61,8 @@ const retweet = async (req: Request, res: Response) => {
                 notification.read = false; //읽음상태 설정
                 
                 await notification.save();
+                io.to(`notifications-${post.user.username}`).emit('new-notification', notification);
+
             }
 
             // 리트윗을 눌렀을 때 트윗의 updateAt을 현재 시간으로 업뎃하기

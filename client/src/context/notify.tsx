@@ -2,6 +2,7 @@ import { Notification } from "@/types";
 import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./auth";
+import { io, Socket } from "socket.io-client";
 
 interface NotificationContextProps {
   //타입 정의
@@ -22,6 +23,7 @@ export const NotificationProvider = ({
 }) => {
   const { authenticated, user } = useAuth(); //useAuth로 인증과 현재 유저 정보 가져옴
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  let socket: Socket;
 
   //서버에서 알림을 가져오는 함수
   const fetchNotifications = async (username?: string) => {
@@ -36,11 +38,24 @@ export const NotificationProvider = ({
   //useEffect에서 Interval을 사용해서 주기적으로 알림을 가져옴
   useEffect(() => {
     if (authenticated && user) {
-      const interval = setInterval(() => {
-        fetchNotifications(user.username);
-      }, 10000);
-      return () => clearInterval(interval);
+      fetchNotifications(user.username);
+      socket = io("http://localhost:4000");
+      socket.on("connect", () => {
+        console.log("서버에 성공적으로 연결됨!!");
+      });
+      socket.emit("subscribe-to-notification", user.username); //알림 구독
+
+      socket.on("new-notification", (notification: Notification) => {
+        setNotifications((prevNotifications) => [
+          notification,
+          ...prevNotifications,
+        ]);
+      });
     }
+
+    return () => {
+      socket?.disconnect();
+    };
   }, [authenticated, user]);
 
   return (

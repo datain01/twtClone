@@ -8,9 +8,7 @@ import React, { useEffect, useState } from "react";
 const NotificationPage = () => {
   const { notifications, fetchNotifications } = useNotify();
   const { user } = useAuth();
-
-  const [notifyLength, setNotifyLength] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const markAsRead = async () => {
     try {
@@ -18,6 +16,7 @@ const NotificationPage = () => {
       const username = user?.username;
       await axios.put(`/users/${username}/notifications/read`);
       setLoading(false);
+      await fetchNotifications(username);
     } catch (error) {
       setLoading(false);
       console.log(error, "읽음 표시 오류");
@@ -25,15 +24,19 @@ const NotificationPage = () => {
   };
 
   useEffect(() => {
-    if (notifications?.length !== notifyLength) {
-      setNotifyLength(notifications?.length || 0); //notifylength 업뎃
+    if (user?.username) {
+      fetchNotifications(user.username);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (notifications?.length) {
       const timer = setTimeout(async () => {
         await markAsRead();
-        fetchNotifications();
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [notifications]);
+  }, [notifications.length]);
 
   if (loading) {
     return <div>Loading...</div>;

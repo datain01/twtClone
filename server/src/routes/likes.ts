@@ -6,6 +6,7 @@ import Tweet from "../entities/Tweet";
 import Like from "../entities/Like";
 import Reply from "../entities/Reply";
 import Notification from "../entities/Notification";
+import { io } from "../socket";
 
 const like = async (req: Request, res: Response) => {
     const {identifier, slug, replyIdentifier, value} = req.body;
@@ -63,6 +64,7 @@ const like = async (req: Request, res: Response) => {
                 notification.read = false; //읽음상태 설정
                 
                 await notification.save();
+                io.to(`notifications-${post.user.username}`).emit('new-notification', notification);
             }
         } else if (value === 0) { //좋아요를 취소하려고 하면 like 객체를 db에서 삭제함
             like.remove();

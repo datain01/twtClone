@@ -46,8 +46,6 @@ const me = async (_: Request, res: Response) => {
 
 const register = async (req: Request, res: Response) => {
     const {email, username, password, nickname} = req.body;
-    console.log('email', email);
-    console.log('nickname', nickname);
 
     try {
         let errors: any = {};

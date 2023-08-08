@@ -7,6 +7,7 @@ import Tweet from "../entities/Tweet";
 import Reply from "../entities/Reply";
 import { Like } from "typeorm";
 import Notification from "../entities/Notification";
+import { io } from "../socket";
 
 // 트윗 검색하기
 const searchTweets = async (req:Request, res:Response) => {
@@ -129,6 +130,8 @@ const createPostReply = async (req: Request, res: Response) => {
             notification.read = false; //읽음상태 설정
             
             await notification.save();
+            io.to(`notifications-${post.user.username}`).emit('new-notification', notification);
+
         
         return res.json(reply);
 

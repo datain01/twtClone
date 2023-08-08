@@ -118,19 +118,6 @@ a {
   }
 }
 
-/* Chrome, Safari, Edge */
-div::-webkit-scrollbar {
-  width: 8px;
-}
-
-div::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-div::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 20px;
-}
 
 .reply-fixed-button {
   width: 4rem; 

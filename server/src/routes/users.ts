@@ -212,7 +212,7 @@ const uploadProfileImage = async (req: Request, res: Response) => {
         }
 
         const imageUrl = `${process.env.APP_URL}/images/${user.profileUrn}`;
-        console.log("Generated Image URL:", imageUrl);
+
         
 
         return res.json(user);
@@ -234,8 +234,7 @@ const ownProfile = async (req:Request, res:Response, next:NextFunction) => {
         }
         next();
     } catch (error) {
-        console.log(error);
-        console.log("본인 확인 오류")
+        console.log(error, "본인 확인 오류");
         return res.status(500).json({error: "문제가 발생했습니다."});
     }
 }
@@ -330,7 +329,7 @@ router.post(
 router.get("/:username/likes", userMiddleware, getLikedTweets);
 router.get("/:username/bookmarks", userMiddleware, authMiddleware, getBookmarks);
 router.patch("/:username/profile", userMiddleware, authMiddleware, updateProfile);
-router.get ("/:username/notifications", userMiddleware, userMiddleware, getNotifications);
-router.put ("/:username/notifications/read", userMiddleware, userMiddleware, markAsRead);
+router.get ("/:username/notifications", userMiddleware, authMiddleware, getNotifications);
+router.put ("/:username/notifications/read", userMiddleware, authMiddleware, markAsRead);
 
 export default router;
