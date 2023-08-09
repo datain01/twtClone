@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import NavBar from "@/components/NavBar";
 import axios from "axios";
 import { SWRConfig } from "swr";
+import { DarkModeProvider } from "@/context/darkmode";
 
 export default function App({ Component, pageProps }: AppProps) {
   Axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/api";
@@ -36,13 +37,15 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <AuthProvider>
         <NotificationProvider>
-          {/* login, register 페이지가 아니면 NavBar를 보여줌*/}
-          <div className="d-flex">
-            {!authRoute && <NavBar />}
-            <div className="flex-grow-1">
-              <Component {...pageProps} />
+          <DarkModeProvider>
+            {/* login, register 페이지가 아니면 NavBar를 보여줌*/}
+            <div className="d-flex">
+              {!authRoute && <NavBar />}
+              <div className="flex-grow-1">
+                <Component {...pageProps} />
+              </div>
             </div>
-          </div>
+          </DarkModeProvider>
         </NotificationProvider>
       </AuthProvider>
     </SWRConfig>

@@ -4,6 +4,7 @@ import { Tweet } from "@/types";
 import useSWRInfinite from "swr/infinite";
 import TweetCard from "@/components/TweetCard";
 import { useEffect, useRef, useState } from "react";
+import { useDarkModeClassNames } from "@/context/darkmode";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -73,8 +74,10 @@ const Home: NextPage = () => {
     observer.observe(element); //를 호출하여 요소에 대한 관찰 시작
   };
 
+  const darkModeClasses = useDarkModeClassNames();
+
   return (
-    <div style={{ overflow: "auto", background: "light" }}>
+    <div className={`bg-dark ${darkModeClasses}`}>
       {isInitialLoading && <p className="text-lg text-center">Loading...</p>}
       {tweets?.map((tweet, index) => (
         <TweetCard

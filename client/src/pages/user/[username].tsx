@@ -116,7 +116,7 @@ const UserPage = () => {
   if (!userData) return <div> Loading</div>;
 
   return (
-    <div style={{ overflow: "auto" }}>
+    <div>
       <input
         type="file"
         hidden={true}

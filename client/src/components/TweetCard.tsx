@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/auth";
+import { useDarkModeClassNames } from "@/context/darkmode";
 import { Tweet } from "@/types";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -42,6 +43,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
 }) => {
   const router = useRouter();
   const { user: currentUser, authenticated } = useAuth();
+  const darkModeClasses = useDarkModeClassNames(); //다크모드
 
   const currentUserProfileUrl =
     currentUser?.profileUrl ||
@@ -104,7 +106,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
 
   return (
     <div
-      className="card"
+      className={`card  ${darkModeClasses}`}
       style={{ borderRadius: 0, borderLeft: "none", borderRight: "none" }}
       onClick={() => router.push(`/${identifier}/${slug}`)}
       ref={innerRef}

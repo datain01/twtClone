@@ -50,7 +50,7 @@ app.use(express.static("public"));
 
 io.on("connection", (socket) => {
     console.log(`클라이언트 연결 아이디: ${socket.id}`)
-    socket.on("subscribe-to-notification", (userId) => {
+    socket.on("connect-notification", (userId) => {
         socket.join(`notifications-${userId}`);
     })
 })

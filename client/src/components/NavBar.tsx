@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -17,11 +17,13 @@ import {
 import Dropdown from "react-bootstrap/Dropdown";
 import { useAuth } from "@/context/auth";
 import { useNotify } from "@/context/notify";
+import { useDarkMode } from "@/context/darkmode";
 
 const NavBar: React.FC = () => {
   const router = useRouter();
   const { logout, user, authenticated, loading } = useAuth();
   const { notifications } = useNotify();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const unread = notifications?.filter((n) => !n.read).length || 0;
 
@@ -181,7 +183,7 @@ const NavBar: React.FC = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item href="#">Dark Mode</Dropdown.Item>
+              <Dropdown.Item onClick={toggleDarkMode}>Dark Mode</Dropdown.Item>
               <Dropdown.Item
                 href={`/user/${user?.username}`}
                 onClick={(e) => {

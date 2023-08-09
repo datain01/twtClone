@@ -116,8 +116,7 @@ const TweetPage = () => {
   };
 
   return (
-    // 나중에 헤더 만들어서 넣자
-    <div className="mt-5 ms-4" style={{ overflow: "auto" }}>
+    <div className="mt-5 ms-4">
       {/* 본 트윗 시작*/}
       {post && post.user && (
         <>

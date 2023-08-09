@@ -39,7 +39,6 @@ const NotifyGroup: React.FC<NotifyGroupProps> = ({
         <div
           className="card"
           style={{
-            width: "100%",
             borderRadius: 0,
             borderLeft: "none",
             borderRight: "none",

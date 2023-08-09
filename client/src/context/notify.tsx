@@ -35,7 +35,7 @@ export const NotificationProvider = ({
     }
   };
 
-  //useEffect에서 Interval을 사용해서 주기적으로 알림을 가져옴
+  //useEffect에서 소켓 통신을 이용해서 알림을 가져옴
   useEffect(() => {
     if (authenticated && user) {
       fetchNotifications(user.username);
@@ -43,7 +43,7 @@ export const NotificationProvider = ({
       socket.on("connect", () => {
         console.log("서버에 성공적으로 연결됨!!");
       });
-      socket.emit("subscribe-to-notification", user.username); //알림 구독
+      socket.emit("connect-notification", user.username); //알림 구독
 
       socket.on("new-notification", (notification: Notification) => {
         setNotifications((prevNotifications) => [

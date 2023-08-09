@@ -17,7 +17,7 @@ const Bookmark = () => {
   } = useSWR<any>(username ? `/users/${username}/bookmarks` : null);
 
   return (
-    <div style={{ overflow: "auto" }}>
+    <div>
       <div
         className="container border-bottom fs-3 fw-light ms-4"
         style={{ height: "3rem" }}

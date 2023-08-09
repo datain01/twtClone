@@ -43,7 +43,7 @@ const NotificationPage = () => {
   }
 
   return (
-    <div style={{ height: "100vh", overflow: "auto" }}>
+    <div style={{ height: "100vh" }}>
       <div
         className="container border-bottom fs-3 fw-light ms-4"
         style={{ height: "3rem" }}
