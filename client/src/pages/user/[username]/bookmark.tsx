@@ -1,4 +1,5 @@
 import TweetCard from "@/components/TweetCard";
+import { useDarkModeClassNames } from "@/context/darkmode";
 import { Tweet } from "@/types";
 import axios from "axios";
 import { GetServerSideProps } from "next";
@@ -8,6 +9,8 @@ import useSWR from "swr";
 const Bookmark = () => {
   const router = useRouter();
   const username = router.query.username;
+
+  const { backgroundClass, textClass } = useDarkModeClassNames(); //다크모드
 
   //username이 있으면 /users/{username}에서 데이터를 가져오고, 없으면 null 반환
   const {
@@ -19,7 +22,7 @@ const Bookmark = () => {
   return (
     <div>
       <div
-        className="container border-bottom fs-3 fw-light ms-4"
+        className={`container border-bottom fs-3 fw-light ms-4 ${backgroundClass} ${textClass}`}
         style={{ height: "3rem" }}
       >
         북마크 목록

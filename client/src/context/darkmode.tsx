@@ -32,18 +32,14 @@ export const DarkModeProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// 새로운 훅
-export const useDarkModeClassNames = (
-  classes = {
-    darkBg: "bg-dark",
-    darkText: "text-light",
-    lightBg: "bg-light",
-    lightText: "text-dark",
-  }
-) => {
+export const useDarkModeClassNames = () => {
   const { isDarkMode } = useDarkMode();
 
-  return isDarkMode
-    ? `${classes.darkBg} ${classes.darkText}`
-    : `${classes.lightBg} ${classes.lightText}`;
+  return {
+    backgroundClass: isDarkMode ? "bg-dark" : "bg-light",
+    textClass: isDarkMode ? "text-light" : "text-dark",
+    mutedTextClass: isDarkMode ? "text-muted-dark" : "text-muted",
+    btnClass: isDarkMode ? "btn-outline-light" : "btn-outline-secondary",
+    inputClass: isDarkMode ? "input-dark" : "input-light",
+  };
 };

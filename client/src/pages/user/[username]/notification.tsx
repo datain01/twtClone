@@ -1,5 +1,6 @@
 import NotifyGroup from "@/components/NotifyGroup";
 import { useAuth } from "@/context/auth";
+import { useDarkMode, useDarkModeClassNames } from "@/context/darkmode";
 import { useNotify } from "@/context/notify";
 import { Notification } from "@/types";
 import axios from "axios";
@@ -9,6 +10,7 @@ const NotificationPage = () => {
   const { notifications, fetchNotifications } = useNotify();
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
+  const { backgroundClass, textClass } = useDarkModeClassNames(); //다크모드
 
   const markAsRead = async () => {
     try {
@@ -43,7 +45,10 @@ const NotificationPage = () => {
   }
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div
+      className={`${backgroundClass} ${textClass}`}
+      style={{ height: "100vh" }}
+    >
       <div
         className="container border-bottom fs-3 fw-light ms-4"
         style={{ height: "3rem" }}

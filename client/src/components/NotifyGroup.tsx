@@ -1,3 +1,4 @@
+import { useDarkMode, useDarkModeClassNames } from "@/context/darkmode";
 import { Notification } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,8 +34,20 @@ const NotifyGroup: React.FC<NotifyGroupProps> = ({
     window.location.href = `/user/${notification.sender.username}`;
   };
 
+  const { backgroundClass, textClass, mutedTextClass } =
+    useDarkModeClassNames(); //다크모드
+  const { isDarkMode } = useDarkMode();
+
+  const backgroundColor = isDarkMode
+    ? notification.read
+      ? "#3f3f3f"
+      : "#2b2b2b"
+    : notification.read
+    ? "#D3D3D3"
+    : "white";
+
   return (
-    <div>
+    <div className={`${backgroundClass}`}>
       <Link href={`/${identifier}/${slug}`} style={{ textDecoration: "none" }}>
         <div
           className="card"
@@ -42,11 +55,11 @@ const NotifyGroup: React.FC<NotifyGroupProps> = ({
             borderRadius: 0,
             borderLeft: "none",
             borderRight: "none",
-            backgroundColor: notification.read ? "#D3D3D3" : "white",
+            backgroundColor: backgroundColor,
           }}
         >
-          <div className="card-body">
-            <h5 className="card-title">
+          <div className={`card-body ${textClass}`}>
+            <h5 className={`card-title ${textClass}`}>
               <span className="me-2">
                 {notification.type === "like" && <HeartFill fill="red" />}
                 {notification.type === "retweet" && (
@@ -69,10 +82,10 @@ const NotifyGroup: React.FC<NotifyGroupProps> = ({
             </h5>
           </div>
           <div className="ms-3">
-            <p className="card-text">
+            <p className={`card-text ${textClass}`}>
               {notification.sender.nickname} {getNotificationText()}
             </p>
-            <p className="text-muted">{notification.tweet?.content}</p>
+            <p className={`${mutedTextClass}`}>{notification.tweet?.content}</p>
           </div>
 
           {/* 내 트윗의 내용 일부 */}

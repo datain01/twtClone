@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/auth";
+import { useDarkModeClassNames } from "@/context/darkmode";
 import { Tweet } from "@/types";
 import axios from "axios";
 import { GetServerSideProps } from "next";
@@ -11,6 +12,7 @@ const PostTweet = () => {
   const router = useRouter();
   const [content, setContent] = useState("");
   const [errors, setErrors] = useState<any>({});
+  const { inputClass, btnClass } = useDarkModeClassNames();
 
   const { user } = useAuth();
 
@@ -46,22 +48,26 @@ const PostTweet = () => {
             height="50"
             className="rounded-circle"
           />
-          <button className="btn btn-info position-absolute top-0 end-0 text-light tweet-fixed-button">
+          <button
+            className={`btn ${btnClass} position-absolute top-0 end-0 tweet-fixed-button`}
+          >
             트윗하기
           </button>
         </div>
-        <textarea
-          className="form-control mt-2"
-          id="exampleFormControlTextarea1"
-          style={{
-            width: "100%",
-            height: "200px",
-            resize: "none",
-          }}
-          placeholder="무슨 일이 일어나고 있나요?"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        ></textarea>
+        <div className={`form-group ${inputClass}`}>
+          <textarea
+            className="form-control mt-2"
+            id="exampleFormControlTextarea1"
+            style={{
+              width: "100%",
+              height: "200px",
+              resize: "none",
+            }}
+            placeholder="무슨 일이 일어나고 있나요?"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          ></textarea>
+        </div>
       </div>
     </form>
   );

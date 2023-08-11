@@ -43,7 +43,8 @@ const TweetCard: React.FC<TweetCardProps> = ({
 }) => {
   const router = useRouter();
   const { user: currentUser, authenticated } = useAuth();
-  const darkModeClasses = useDarkModeClassNames(); //다크모드
+  const { backgroundClass, textClass, mutedTextClass } =
+    useDarkModeClassNames(); //다크모드
 
   const currentUserProfileUrl =
     currentUser?.profileUrl ||
@@ -106,7 +107,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
 
   return (
     <div
-      className={`card  ${darkModeClasses}`}
+      className={`card  ${backgroundClass} ${textClass}`}
       style={{ borderRadius: 0, borderLeft: "none", borderRight: "none" }}
       onClick={() => router.push(`/${identifier}/${slug}`)}
       ref={innerRef}
@@ -119,7 +120,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
             <div className="d-flex">
               <Link
                 href={`/user/${user?.username}`}
-                className="text-decoration-none"
+                className={`text-decoration-none ${textClass}`}
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
@@ -134,21 +135,21 @@ const TweetCard: React.FC<TweetCardProps> = ({
               </Link>
               <Link
                 href={`/user/${user?.username}`}
-                className="text-decoration-none"
+                className={`text-decoration-none ${textClass}`}
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
               >
                 <div className="ms-3">
-                  <strong style={{ color: "black" }}>{user?.nickname}</strong>
-                  <p className="mb-0 text-muted">@{user?.username}</p>
+                  <strong className={`${textClass}`}>{user?.nickname}</strong>
+                  <p className={`mb-0 ${mutedTextClass}`}>@{user?.username}</p>
                 </div>
               </Link>
             </div>
             <p className="mt-2 fs-5" onClick={(e) => e.stopPropagation()}>
               {content}
             </p>
-            <p className="fs-6 text-muted">
+            <p className={`fs-6 ${mutedTextClass}`}>
               {dayjs(createdAt)
                 .add(9, "hour")
                 .format("A HH:mm · YYYY년 MM월 DD일")}
@@ -161,7 +162,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
               {/* 답글 버튼 */}
               <button
                 type="button"
-                className="btn text-muted"
+                className={`btn ${mutedTextClass}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (authenticated) {
@@ -176,7 +177,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
               {/* 리트윗 */}
               <button
                 type="button"
-                className="btn text-muted"
+                className={`btn ${mutedTextClass}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   retweet(1);
@@ -191,7 +192,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
               {/* 좋아요 */}
               <button
                 type="button"
-                className="btn text-muted"
+                className={`btn ${mutedTextClass}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   like(1);
@@ -206,7 +207,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
               {/* 북마크 */}
               <button
                 type="button"
-                className="btn text-muted"
+                className={`btn ${mutedTextClass}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   bookmark(1);

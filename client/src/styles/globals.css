@@ -118,6 +118,32 @@ a {
   }
 }
 
+.text-muted-dark {
+  color: #bebebe !important;
+}
+
+.nav-link.active {
+  border: none !important;
+}
+
+.input-dark .form-control {
+  background-color: #343a40 !important; /* 다크 모드일 때의 검색창 색상 */
+  border-color: #555 !important;
+}
+
+.input-light .form-control {
+  background-color: #f8f9fa !important; /* 일반 모드일 때의 검색창 색상 */
+  border-color: #ccc !important;
+}
+
+.input-dark textarea::placeholder {
+  color:#ccc
+}
+
+.input-light textarea::placeholder {
+  color:#999
+}
+
 
 .reply-fixed-button {
   width: 4rem; 

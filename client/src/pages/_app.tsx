@@ -9,6 +9,7 @@ import NavBar from "@/components/NavBar";
 import axios from "axios";
 import { SWRConfig } from "swr";
 import { DarkModeProvider } from "@/context/darkmode";
+import BackgroundComponent from "@/components/Background";
 
 export default function App({ Component, pageProps }: AppProps) {
   Axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/api";
@@ -38,6 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <NotificationProvider>
           <DarkModeProvider>
+            <BackgroundComponent />
             {/* login, register 페이지가 아니면 NavBar를 보여줌*/}
             <div className="d-flex">
               {!authRoute && <NavBar />}

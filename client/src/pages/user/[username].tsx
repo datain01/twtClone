@@ -1,5 +1,6 @@
 import TweetCard from "@/components/TweetCard";
 import { useAuth } from "@/context/auth";
+import { useDarkModeClassNames } from "@/context/darkmode";
 import { Tweet } from "@/types";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -11,6 +12,8 @@ import axios from "axios";
 const UserPage = () => {
   const router = useRouter();
   const username = router.query.username;
+  const { backgroundClass, textClass, mutedTextClass, btnClass } =
+    useDarkModeClassNames(); //다크모드
 
   // username이 있으면 /users/{username}에서 데이터를 가져오고, 없으면 null 반환
   const {
@@ -116,14 +119,17 @@ const UserPage = () => {
   if (!userData) return <div> Loading</div>;
 
   return (
-    <div>
+    <div className={`${backgroundClass} ${textClass}`}>
       <input
         type="file"
         hidden={true}
         ref={fileInputRef}
         onChange={uploadImage}
       />
-      <div className="card position-relative mx-2" style={{ border: "none" }}>
+      <div
+        className={`card position-relative mx-2 ${backgroundClass} ${textClass}`}
+        style={{ border: "none" }}
+      >
         {/* 프로필 사진 */}
         {editMode ? (
           <>
@@ -159,7 +165,7 @@ const UserPage = () => {
               {/* 수정모드on */}
               <span>
                 <button
-                  className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3"
+                  className={`btn ${btnClass} position-absolute top-0 end-0 mt-4 me-3`}
                   onClick={handleSave}
                 >
                   프로필 저장
@@ -182,7 +188,7 @@ const UserPage = () => {
                   <div className="text-danger">{nicknameError}</div>
                 )}
 
-                <p className="card-subtitle text-muted">
+                <p className={`card-subtitle  ${mutedTextClass}`}>
                   @{userData.user.username}
                 </p>
                 <div className="input-group">
@@ -216,7 +222,7 @@ const UserPage = () => {
                 {/* 자신의 프로필일때만 수정 버튼이 보이도록 */}
                 {ownProfile && (
                   <button
-                    className="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3"
+                    className={`btn ${btnClass} position-absolute top-0 end-0 mt-4 me-3`}
                     onClick={handleEdit}
                   >
                     프로필 수정
@@ -226,7 +232,7 @@ const UserPage = () => {
 
               <div className="card-body">
                 <h5 className="card-title">{userData.user.nickname}</h5>
-                <p className="card-subtitle text-muted">
+                <p className={`card-subtitle  ${mutedTextClass}`}>
                   @{userData.user.username}
                 </p>
                 <p className="card-text mt-3"> {userData.user.introduce}</p>
@@ -240,7 +246,10 @@ const UserPage = () => {
         </>
       </div>
 
-      <ul className="nav nav-tabs nav-fill nav-pills">
+      <ul
+        className="nav nav-tabs nav-fill nav-pills"
+        style={{ border: "none" }}
+      >
         <li className="nav-item">
           <a
             className={`nav-link ${activeTab === "tweets" ? "active" : ""}`}

@@ -39,7 +39,7 @@ const Register = () => {
   };
 
   return (
-    <div className="bg-light bg-gradient py-5">
+    <div className="py-5">
       <div
         className="row justify-content-center align-items-center text-center"
         style={{ height: "80vh" }}

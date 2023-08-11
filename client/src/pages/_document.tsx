@@ -1,6 +1,4 @@
-import { useDarkModeClassNames } from "@/context/darkmode";
 import { Html, Head, Main, NextScript } from "next/document";
-import Link from "next/link";
 
 export default function Document() {
   return (
