@@ -1,4 +1,3 @@
-import TweetCard from "@/components/TweetCard";
 import SearchCard from "@/components/searchCard";
 import { useDarkMode, useDarkModeClassNames } from "@/context/darkmode";
 import { Tweet } from "@/types";
