@@ -55,7 +55,10 @@ export const getServerSideProps: GetServerSideProps = async ({
     if (!cookie) throw new Error("로그인이 필요합니다.");
 
     //쿠키가 있다면 그걸로 백엔드에서 인증처리함
-    const { data: user } = await axios.get("/auth/me", { headers: { cookie } });
+    const { data: user } = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/auth/me`,
+      { headers: { cookie } }
+    );
 
     // 로그인한 유저의 유저네임과 페이지의 유저네임이 다르면 홈으로 리다이렉트
     if (user.username !== params?.username) {

@@ -39,7 +39,8 @@ export const NotificationProvider = ({
   useEffect(() => {
     if (authenticated && user) {
       fetchNotifications(user.username);
-      socket = io("http://localhost:4000");
+      const serverURL =
+        process.env.NEXT_PUBLIC_SERVER_BASE_URL || "http://localhost:4000";
       socket.on("connect", () => {
         console.log("서버에 성공적으로 연결됨!!");
       });

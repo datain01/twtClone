@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build:dev": "env-cmd -f .env.development next build",
+    "build:prod": "env-cmd -f .env.production next build",
+    "start:dev": "env-cmd -f .env.development next start",
+    "start:prod": "env-cmd -f .env.production next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -24,6 +26,7 @@
     "dayjs": "1.11.9",
     "dayjs-ext": "2.2.0",
     "dayjs-plugin-utc": "0.1.2",
+    "env-cmd": "10.1.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
     "next": "13.4.10",
@@ -31,6 +34,7 @@
     "react-bootstrap": "2.8.0",
     "react-bootstrap-icons": "1.10.3",
     "react-dom": "18.2.0",
+    "sharp": "0.32.5",
     "socket.io-client": "4.7.2",
     "swr": "2.2.0",
     "timezone": "1.0.23",

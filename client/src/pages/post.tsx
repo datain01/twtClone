@@ -82,7 +82,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     if (!cookie) throw new Error("로그인이 필요합니다.");
 
     //쿠키가 있다면 그걸로 백엔드에서 인증처리함
-    await axios.get("/auth/me", { headers: { cookie } });
+    await axios.get(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/auth/me`, {
+      headers: { cookie },
+    });
 
     return { props: {} };
   } catch (error) {

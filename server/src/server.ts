@@ -17,7 +17,7 @@ import { initializeIo } from "./socket";
 
 
 const app = express();
-const origin = "http://localhost:3000";
+const origin = "process.env.ORIGIN";
 app.use(cors({
     origin,
     credentials:true
@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
 let port = process.env.PORT || 4000;
 
 httpServer.listen(port, async () => {
-    console.log(`server running at http://localhost:${port}`);
+    console.log(`server running at ${process.env.APP_URL}`);
 
     AppDataSource.initialize().then(async () => {
 
