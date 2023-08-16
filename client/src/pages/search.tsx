@@ -1,4 +1,5 @@
 import TweetCard from "@/components/TweetCard";
+import SearchCard from "@/components/searchCard";
 import { useDarkMode, useDarkModeClassNames } from "@/context/darkmode";
 import { Tweet } from "@/types";
 import axios from "axios";
@@ -50,7 +51,7 @@ const SearchPage = () => {
       <div>
         {/* 검색해서 나온 트윗들 나열 */}
         {results.map((tweet) => (
-          <TweetCard key={tweet.identifier} tweet={tweet} />
+          <SearchCard key={tweet.identifier} tweet={tweet} />
         ))}
       </div>
     </div>
