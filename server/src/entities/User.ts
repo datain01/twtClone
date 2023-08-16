@@ -1,4 +1,4 @@
-import { IsEmail, Length, Matches } from "class-validator";
+import { IsEmail, IsOptional, Length, Matches } from "class-validator";
 import { BeforeInsert, Column, Entity, Index, OneToMany } from "typeorm";
 import bcrypt from 'bcryptjs';
 
@@ -42,8 +42,9 @@ export default class User extends BaseEntity {
     nickname:string;
 
 // 자기소개
-    @Column({ nullable: true })
+    @IsOptional()    
     @Length(0, 50, {message:"자기소개는 1~50 자이어야 합니다.", groups: ["profileUpdate"]})
+    @Column({ nullable: true })
     introduce:string;
 
 // 트윗
