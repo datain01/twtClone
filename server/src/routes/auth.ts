@@ -58,6 +58,7 @@ const register = async (req: Request, res: Response) => {
         if (usernameUser) {errors.username = "이미 사용된 닉네임입니다";}
 
         if (Object.keys(errors).length > 0) { //에러가 있다면 에러를 response 반환
+            console.log(errors)
             return res.status(400).json(errors);
         }
 

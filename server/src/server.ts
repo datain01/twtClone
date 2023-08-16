@@ -17,7 +17,7 @@ import { initializeIo } from "./socket";
 
 
 const app = express();
-const origin = "process.env.ORIGIN";
+const origin = process.env.ORIGIN;
 app.use(cors({
     origin,
     credentials:true
