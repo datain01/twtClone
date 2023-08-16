@@ -88,7 +88,10 @@ const TweetCard: React.FC<TweetCardProps> = ({
 
     try {
       await axios.post("/retweets", { identifier, slug, value });
-      if (mutate) mutate();
+
+      if (mutate) {
+        await mutate();
+      }
     } catch (error) {
       console.log(error);
     }

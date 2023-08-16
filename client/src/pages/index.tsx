@@ -6,8 +6,6 @@ import TweetCard from "@/components/TweetCard";
 import { useEffect, useRef, useState } from "react";
 import { useDarkModeClassNames } from "@/context/darkmode";
 
-const inter = Inter({ subsets: ["latin"] });
-
 const Home: NextPage = () => {
   //ref가 펜이라면 useRef는 메모종이. scrollContainer는 ref를 이용해서 주소를 메모에 기록해둔거임...
   const observedElementRef = useRef(null); //특정 엘리먼트의 주소를 기록. 여기서는 tweetCard가 그 엘리먼트

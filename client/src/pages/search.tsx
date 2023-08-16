@@ -30,8 +30,8 @@ const SearchPage = () => {
   return (
     <div className={`mt-5 ${backgroundClass} ${textClass}`}>
       {/* 검색창 */}
-      <form onSubmit={handleSearch}>
-        <div className={`input-group input-group-lg mb-3 ${inputClass}`}>
+      <form onSubmit={handleSearch} className="mx-4">
+        <div className={`input-group input-group-lg mb-4 ${inputClass}`}>
           <input
             type="text"
             className="form-control"
