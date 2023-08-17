@@ -89,7 +89,7 @@ const getPostReplies = async (req: Request, res: Response) => {
         if (res.locals.user) { //로그인한 사용자가 각 답글에 대해 좋아요/리트윗을 했는지 설정
             replies.forEach((c) => c.setUserLike(res.locals.user))
             replies.forEach((c) => c.setUserRetweet(res.locals.user))
-            replies.forEach((p)=>p.setUserBookmark(res.locals.user));
+            replies.forEach((c)=>c.setUserBookmark(res.locals.user));
         }
 
         return res.json(replies); //응답!!!!
@@ -118,6 +118,7 @@ const createPostReply = async (req: Request, res: Response) => {
 
         if (res.locals.user) {
             post.setUserLike(res.locals.user);
+            post.setUserBookmark(res.locals.user);
         }
 
         await reply.save();
