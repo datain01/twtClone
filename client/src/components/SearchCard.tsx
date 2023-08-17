@@ -1,20 +1,11 @@
 import { useAuth } from "@/context/auth";
 import { useDarkModeClassNames } from "@/context/darkmode";
 import { Tweet } from "@/types";
-import axios from "axios";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { FormEvent, useState, Ref } from "react";
-import {
-  ArrowRepeat,
-  Bookmark,
-  BookmarkFill,
-  Chat,
-  Heart,
-  HeartFill,
-} from "react-bootstrap-icons";
+import React from "react";
 
 interface SearchCardProps {
   tweet: Tweet;
