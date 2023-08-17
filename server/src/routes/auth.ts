@@ -4,18 +4,13 @@ import User from "../entities/User";
 import  bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
-
 import userMiddleware from "../middlewares/user";
 import authMiddleware from "../middlewares/auth";
-
 
 interface ErrorObject {
     property: string;
     constraints: { [key: string]: string };
   }
-
-
-
 
 const logout = async ( _ : Request, res : Response) => {
     res.set (

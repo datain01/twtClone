@@ -29,8 +29,6 @@ const TweetCard: React.FC<TweetCardProps> = ({
     content,
     user,
     createdAt,
-    updatedAt,
-    url,
     userLike,
     likeScore,
     userRetweet,
@@ -50,8 +48,8 @@ const TweetCard: React.FC<TweetCardProps> = ({
     currentUser?.profileUrl ||
     "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
-  const [showReply, setShowReply] = useState(false); //답글 버튼 눌렀을때 답멘창 보여주기 여부
-  const [newReply, setNewReply] = useState(""); //답멘 제출용
+  const [showReply, setShowReply] = useState(false); //답글 버튼 눌렀을때 답글창 보여주기 여부
+  const [newReply, setNewReply] = useState(""); //답글 제출용
 
   const submitReply = async (event: FormEvent) => {
     event.preventDefault();
