@@ -42,7 +42,7 @@ export const useDarkModeClassNames = () => {
   const { isDarkMode } = useDarkMode();
 
   return {
-    backgroundClass: isDarkMode ? "bg-dark" : "bg-light",
+    backgroundClass: isDarkMode ? "bg-dark" : "bg-white",
     textClass: isDarkMode ? "text-light" : "text-dark",
     mutedTextClass: isDarkMode ? "text-muted-dark" : "text-muted",
     btnClass: isDarkMode ? "btn-outline-light" : "btn-outline-secondary",
