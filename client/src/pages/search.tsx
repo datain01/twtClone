@@ -1,4 +1,4 @@
-import SearchCard from "@/components/searchCard";
+import SearchCard from "@/components/SearchCard";
 import { useDarkMode, useDarkModeClassNames } from "@/context/darkmode";
 import { Tweet } from "@/types";
 import axios from "axios";
