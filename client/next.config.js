@@ -5,8 +5,8 @@ const nextConfig = {
     domains: ["www.gravatar.com", 
     "localhost",
     "nwz-sandbox.net",
-    "twt-api.nps-sb.nws-sandbox.net",
-    "twt-web.nps-sb.nws-sandbox.net"],
+    "twt-api.nps-sb.nwz-sandbox.net",
+    "twt-web.nps-sb.nwz-sandbox.net"],
   },
 }
 
