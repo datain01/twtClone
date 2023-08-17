@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     domains: ["www.gravatar.com", 
     "localhost",
-    "twt-web.nps-sb.nwz-sandbox.net"],
+    "twt-web.nps-sb.nwz-sandbox"],
   },
 }
 
